@@ -1,0 +1,102 @@
+<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bannerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8fafc;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="lightningGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+    </linearGradient>
+    
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Clean gradient background -->
+  <rect width="1200" height="300" fill="url(#bannerGradient)"/>
+  
+  <!-- Main text "promptLY" - centered -->
+  <text x="600" y="140" 
+        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" 
+        font-size="90" 
+        font-weight="800" 
+        fill="url(#textGradient)" 
+        text-anchor="middle"
+        letter-spacing="-1">
+    promptLY
+  </text>
+  
+  <!-- Smaller black pen with white highlights - moved further right -->
+  <g transform="translate(830, 105) rotate(35)">
+    <!-- Black pen body (smaller) -->
+    <path d="M -8 -60 L -8 15 Q -8 22, -4 26 L 0 30 L 4 26 Q 8 22, 8 15 L 8 -60 Z" 
+          fill="#1a1a1a" 
+          stroke="#0a0a0a"
+          stroke-width="0.5"/>
+    
+    <!-- White highlight on pen -->
+    <path d="M -5 -56 L -5 13 Q -5 19, -3 23" 
+          stroke="#ffffff"
+          stroke-width="1.5"
+          fill="none"
+          opacity="0.4"
+          stroke-linecap="round"/>
+    
+    <!-- Black pen nib -->
+    <path d="M -4 26 L 0 30 L 4 26 L 0 23 Z" 
+          fill="#0a0a0a"/>
+    
+    <!-- Silver/white clip -->
+    <rect x="-2" y="-52" width="4" height="20" rx="2" fill="#e5e7eb"/>
+    <ellipse cx="0" cy="-32" rx="3" ry="4" fill="#d1d5db"/>
+    
+    <!-- White grip lines -->
+    <line x1="-8" y1="-6" x2="8" y2="-6" stroke="#ffffff" stroke-width="0.8" opacity="0.3"/>
+    <line x1="-8" y1="-1" x2="8" y2="-1" stroke="#ffffff" stroke-width="0.8" opacity="0.3"/>
+    <line x1="-8" y1="4" x2="8" y2="4" stroke="#ffffff" stroke-width="0.8" opacity="0.3"/>
+    <line x1="-8" y1="9" x2="8" y2="9" stroke="#ffffff" stroke-width="0.8" opacity="0.3"/>
+  </g>
+  
+  <!-- Simple writing trail -->
+  <path d="M 760 130 Q 785 132, 815 140"
+        stroke="#ffffff"
+        stroke-width="4"
+        fill="none"
+        stroke-linecap="round"
+        opacity="0.5"/>
+  
+  <!-- Lightning bolt at pen tip -->
+  <g transform="translate(830, 132)">
+    <path d="M 2 -12 L -6 2 L -1 2 L -4 15 L 8 -2 L 2 -2 Z" 
+          fill="url(#lightningGradient)"
+          filter="url(#glow)"/>
+  </g>
+  
+  <!-- Tagline -->
+  <text x="600" y="190" 
+        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" 
+        font-size="26" 
+        font-weight="400" 
+        fill="rgba(255,255,255,0.95)" 
+        text-anchor="middle"
+        letter-spacing="0.5">
+    Your thoughts, refined — instantly
+  </text>
+  
+  <!-- Small accent sparkles -->
+  <circle cx="350" cy="90" r="3" fill="#fbbf24" opacity="0.6"/>
+  <circle cx="850" cy="200" r="3" fill="#fbbf24" opacity="0.6"/>
+  <circle cx="920" cy="120" r="2.5" fill="#f59e0b" opacity="0.5"/>
+</svg>
