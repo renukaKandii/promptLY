@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "promptLY",
+    "version": "0.0.1",
+    "description": "Think clearly. Write promptly. A private on device writing companion.",
+    "permissions": ["contextMenus", "activeTab", "scripting", "storage", "sidePanel", "clipboardWrite"],
+    "background": { "service_worker": "src/background/service-worker.js" },
+    "action": { "default_title": "promptLY" },
+    "side_panel": { "default_path": "src/ui/sidepanel.html" },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["src/content/content.js"],
+        "run_at": "document_idle"
+      }
+    ]
+  }

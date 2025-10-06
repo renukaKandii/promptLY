@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>promptLY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #818cf8;
+        --bg-main: #0f172a;
+        --bg-card: #1e293b;
+        --bg-input: #334155;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+        --border: #475569;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+        background: var(--bg-main);
+        color: var(--text-primary);
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+      
+      /* Header Section */
+      .header {
+        background: var(--gradient);
+        padding: 24px 20px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 8s ease-in-out infinite;
+      }
+      
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+      }
+      
+      .logo {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+      }
+      
+      .tagline {
+        font-size: 13px;
+        opacity: 0.9;
+        font-weight: 400;
+        position: relative;
+        z-index: 1;
+      }
+      
+      /* Status Bar */
+      .status-bar {
+        background: var(--bg-card);
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .status-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--success);
+        animation: blink 2s ease-in-out infinite;
+      }
+      
+      .status-indicator.warning {
+        background: var(--warning);
+      }
+      
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+      }
+      
+      .status-text {
+        font-size: 12px;
+        color: var(--text-secondary);
+        flex: 1;
+      }
+      
+      .runtime-badge {
+        font-size: 10px;
+        padding: 4px 8px;
+        border-radius: 6px;
+        background: rgba(99, 102, 241, 0.2);
+        color: var(--primary-light);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      /* Main Content */
+      .container {
+        padding: 20px;
+      }
+      
+      /* Control Panel */
+      .control-panel {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      
+      .control-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+      
+      .control-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .control-group.full-width {
+        grid-column: 1 / -1;
+      }
+      
+      .control-label {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      
+      .label-icon {
+        font-size: 14px;
+      }
+      
+      select {
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        color: var(--text-primary);
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        outline: none;
+      }
+      
+      select:hover {
+        border-color: var(--primary-light);
+      }
+      
+      select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+      
+      /* Custom Prompt Section */
+      .custom-prompt-section {
+        margin-bottom: 16px;
+      }
+      
+      .custom-prompt-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+      
+      .toggle-prompt {
+        background: transparent;
+        border: none;
+        color: var(--primary-light);
+        font-size: 12px;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+      }
+      
+      .toggle-prompt:hover {
+        background: rgba(99, 102, 241, 0.1);
+      }
+      
+      .custom-prompt-input {
+        width: 100%;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        color: var(--text-primary);
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-family: inherit;
+        resize: none;
+        transition: all 0.2s ease;
+        outline: none;
+        min-height: 60px;
+        display: none;
+      }
+      
+      .custom-prompt-input.visible {
+        display: block;
+      }
+      
+      .custom-prompt-input::placeholder {
+        color: var(--text-muted);
+      }
+      
+      .custom-prompt-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+      
+      /* Input Area */
+      .input-section {
+        margin-bottom: 20px;
+      }
+      
+      textarea {
+        width: 100%;
+        min-height: 160px;
+        background: var(--bg-card);
+        border: 2px solid var(--border);
+        color: var(--text-primary);
+        padding: 16px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-family: inherit;
+        resize: vertical;
+        transition: all 0.2s ease;
+        outline: none;
+      }
+      
+      textarea::placeholder {
+        color: var(--text-muted);
+      }
+      
+      textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+      
+      /* Action Buttons */
+      .action-buttons {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      
+      button {
+        flex: 1;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        outline: none;
+      }
+      
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      
+      #run {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      }
+      
+      #run:hover:not(:disabled) {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+      }
+      
+      #run:active:not(:disabled) {
+        transform: translateY(0);
+      }
+      
+      #copy {
+        background: var(--bg-card);
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+      }
+      
+      #copy:hover:not(:disabled) {
+        background: var(--bg-input);
+        border-color: var(--primary-light);
+      }
+      
+      /* Output Area */
+      .output-section {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      
+      .output-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      
+      .output-title {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+      }
+      
+      #out {
+        min-height: 120px;
+        max-height: 400px;
+        overflow-y: auto;
+        background: var(--bg-input);
+        border-radius: 10px;
+        padding: 16px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--text-primary);
+      }
+      
+      #out:empty::before {
+        content: 'Output will appear here...';
+        color: var(--text-muted);
+        font-style: italic;
+      }
+      
+      /* History Section */
+      .history-section {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      
+      .history-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      
+      .history-title {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      
+      .clear-history {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 11px;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+      }
+      
+      .clear-history:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      
+      .history-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      
+      .history-item {
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      
+      .history-item:hover {
+        border-color: var(--primary-light);
+        background: rgba(99, 102, 241, 0.05);
+      }
+      
+      .history-item-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 4px;
+      }
+      
+      .history-item-mode {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--primary-light);
+        text-transform: uppercase;
+      }
+      
+      .history-item-time {
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+      
+      .history-item-text {
+        font-size: 12px;
+        color: var(--text-secondary);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      
+      .history-empty {
+        text-align: center;
+        padding: 20px;
+        color: var(--text-muted);
+        font-size: 13px;
+        font-style: italic;
+      }
+      
+      /* Scrollbar Styling */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: var(--bg-card);
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 4px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-muted);
+      }
+      
+      /* Loading Animation */
+      .loading {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.8s linear infinite;
+      }
+      
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">promptLY</div>
+      <div class="tagline">Your thoughts, refined — instantly</div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-indicator" id="status-indicator"></div>
+      <div class="status-text" id="promptly-status" role="status" aria-live="polite">
+        Checking built-in AI…
+      </div>
+      <div class="runtime-badge" id="runtime-hint">initializing…</div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+      <!-- Control Panel -->
+      <div class="control-panel">
+        <div class="control-grid">
+          <div class="control-group">
+            <label class="control-label">
+              <span class="label-icon">✨</span>
+              Mode
+            </label>
+            <select id="mode" aria-label="Mode">
+              <option value="rewrite">Rewrite</option>
+              <option value="summarize">Summarize</option>
+              <option value="translate">Translate</option>
+              <option value="proofread">Proofread</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">
+              <span class="label-icon">🎭</span>
+              Tone
+            </label>
+            <select id="tone" aria-label="Tone">
+              <option value="professional">Professional</option>
+              <option value="casual">Casual</option>
+              <option value="curious">Curious</option>
+              <option value="poetic">Poetic</option>
+            </select>
+          </div>
+
+          <div class="control-group full-width">
+            <label class="control-label">
+              <span class="label-icon">🌍</span>
+              Language
+            </label>
+            <select id="lang" aria-label="Language">
+              <option value="en" selected>English (en)</option>
+              <option value="es">Español (es)</option>
+              <option value="ja">日本語 (ja)</option>
+            </select>
+          </div>
+
+          <!-- Custom Prompt Section -->
+          <div class="control-group full-width custom-prompt-section">
+            <div class="custom-prompt-header">
+              <label class="control-label">
+                <span class="label-icon">💭</span>
+                Custom Instructions
+              </label>
+              <button type="button" class="toggle-prompt" id="toggle-prompt">
+                + Add Custom Prompt
+              </button>
+            </div>
+            <textarea 
+              id="custom-prompt" 
+              class="custom-prompt-input"
+              placeholder="E.g., 'Make it more persuasive', 'Add technical details', 'Simplify for beginners'..."
+              aria-label="Custom prompt"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Section -->
+      <div class="input-section">
+        <textarea 
+          id="input" 
+          placeholder="Paste your text here or use the right-click context menu…"
+          aria-label="Input text"
+        ></textarea>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button id="run" type="button">
+          <span>⚡</span>
+          <span>Run</span>
+        </button>
+        <button id="copy" type="button">
+          <span>📋</span>
+          <span>Copy</span>
+        </button>
+      </div>
+
+      <!-- Output Section -->
+      <div class="output-section">
+        <div class="output-header">
+          <div class="output-title">Output</div>
+        </div>
+        <div id="out" aria-label="Output"></div>
+      </div>
+
+      <!-- History Section -->
+      <div class="history-section">
+        <div class="history-header">
+          <div class="history-title">
+            <span>📜</span>
+            Recent History
+          </div>
+          <button type="button" class="clear-history" id="clear-history">
+            Clear All
+          </button>
+        </div>
+        <div class="history-list" id="history-list">
+          <div class="history-empty">No history yet</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./sidepanel.js" defer></script>
+  </body>
+</html>
