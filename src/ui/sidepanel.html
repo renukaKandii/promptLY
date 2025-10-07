@@ -133,7 +133,7 @@
         background: var(--bg-card);
         border-radius: 16px;
         padding: 20px;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
         border: 1px solid var(--border);
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
@@ -141,8 +141,8 @@
       .control-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        margin-bottom: 16px;
+        gap: 12px;
+        margin-bottom: 12px;
       }
       
       .control-group {
@@ -193,7 +193,15 @@
       
       /* Custom Prompt Section */
       .custom-prompt-section {
-        margin-bottom: 16px;
+        margin-bottom: 0;
+      }
+
+      .custom-prompt-wrapper {
+        display: block;
+      }
+
+      .custom-prompt-wrapper.hidden {
+        display: none;
       }
       
       .custom-prompt-header {
@@ -206,8 +214,8 @@
       .toggle-prompt {
         background: transparent;
         border: none;
-        color: var(--primary-light);
-        font-size: 12px;
+        color: var(--text-muted);
+        font-size: 11px;
         cursor: pointer;
         padding: 4px 8px;
         border-radius: 6px;
@@ -216,6 +224,7 @@
       
       .toggle-prompt:hover {
         background: rgba(99, 102, 241, 0.1);
+        color: var(--primary-light);
       }
       
       .custom-prompt-input {
@@ -230,12 +239,8 @@
         resize: none;
         transition: all 0.2s ease;
         outline: none;
-        min-height: 60px;
-        display: none;
-      }
-      
-      .custom-prompt-input.visible {
-        display: block;
+        min-height: 55px;
+        margin-bottom: 8px;
       }
       
       .custom-prompt-input::placeholder {
@@ -246,19 +251,89 @@
         border-color: var(--primary);
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
       }
+
+      /* Quick Prompts Section */
+      .quick-prompts-section {
+        margin-top: 0;
+      }
+
+      .quick-prompts-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+
+      .toggle-quick-prompts {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 11px;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+      }
+
+      .toggle-quick-prompts:hover {
+        background: rgba(99, 102, 241, 0.1);
+        color: var(--primary-light);
+      }
+
+      .quick-prompts-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+
+      .quick-prompts-grid.hidden {
+        display: none;
+      }
+
+      .quick-prompt-card {
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 6px 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: left;
+      }
+
+      .quick-prompt-card:hover {
+        border-color: var(--primary-light);
+        background: rgba(99, 102, 241, 0.08);
+      }
+
+      .quick-prompt-card:active {
+        transform: scale(0.98);
+      }
+
+      .quick-prompt-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 2px;
+      }
+
+      .quick-prompt-desc {
+        font-size: 9px;
+        color: var(--text-muted);
+        line-height: 1.2;
+      }
       
       /* Input Area */
       .input-section {
-        margin-bottom: 20px;
+        margin-bottom: 16px;
       }
       
       textarea {
         width: 100%;
-        min-height: 160px;
+        min-height: 140px;
         background: var(--bg-card);
         border: 2px solid var(--border);
         color: var(--text-primary);
-        padding: 16px;
+        padding: 14px;
         border-radius: 12px;
         font-size: 14px;
         font-family: inherit;
@@ -280,7 +355,7 @@
       .action-buttons {
         display: flex;
         gap: 12px;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
       }
       
       button {
@@ -577,15 +652,49 @@
                 Custom Instructions
               </label>
               <button type="button" class="toggle-prompt" id="toggle-prompt">
-                + Add Custom Prompt
+                − Hide Custom
               </button>
             </div>
-            <textarea 
-              id="custom-prompt" 
-              class="custom-prompt-input"
-              placeholder="E.g., 'Make it more persuasive', 'Add technical details', 'Simplify for beginners'..."
-              aria-label="Custom prompt"
-            ></textarea>
+            
+            <div class="custom-prompt-wrapper" id="custom-prompt-wrapper">
+              <textarea 
+                id="custom-prompt" 
+                class="custom-prompt-input"
+                placeholder="E.g., 'Make it more persuasive', 'Add technical details', 'Simplify for beginners'..."
+                aria-label="Custom prompt"
+              ></textarea>
+            </div>
+
+            <!-- Quick Prompts Section -->
+            <div class="quick-prompts-section">
+              <div class="quick-prompts-header">
+                <label class="control-label">
+                  <span class="label-icon">⚡</span>
+                  Quick Prompts
+                </label>
+                <button type="button" class="toggle-quick-prompts" id="toggle-quick-prompts">
+                  − Hide Presets
+                </button>
+              </div>
+              <div class="quick-prompts-grid" id="quick-prompts-grid">
+                <div class="quick-prompt-card" data-prompt="Rewrite this using simple words that a 10-year-old would understand. Avoid technical jargon and complex sentences.">
+                  <div class="quick-prompt-title">Simplify</div>
+                  <div class="quick-prompt-desc">For beginners</div>
+                </div>
+                <div class="quick-prompt-card" data-prompt="Rewrite this in formal academic language with proper structure and scholarly tone. Use precise terminology.">
+                  <div class="quick-prompt-title">Academic</div>
+                  <div class="quick-prompt-desc">Formal style</div>
+                </div>
+                <div class="quick-prompt-card" data-prompt="Make this extremely concise while keeping all key points. Remove unnecessary words and get straight to the point.">
+                  <div class="quick-prompt-title">Concise</div>
+                  <div class="quick-prompt-desc">Brief version</div>
+                </div>
+                <div class="quick-prompt-card" data-prompt="Transform this into a professional, polite email with proper formatting, greeting, and closing.">
+                  <div class="quick-prompt-title">Email</div>
+                  <div class="quick-prompt-desc">Professional</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
