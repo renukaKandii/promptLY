@@ -40,7 +40,7 @@
       /* Header Section */
       .header {
         background: var(--gradient);
-        padding: 24px 20px;
+        padding: 16px 20px;
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -137,6 +137,41 @@
         border: 1px solid var(--border);
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
+
+      .control-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .control-panel-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .reset-all {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 11px;
+        cursor: pointer;
+        padding: 6px 12px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        flex: none;
+      }
+
+      .reset-all:hover {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: #ef4444;
+        color: #ef4444;
+      }
       
       .control-grid {
         display: grid;
@@ -190,6 +225,11 @@
         border-color: var(--primary);
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
       }
+
+      select:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
       
       /* Custom Prompt Section */
       .custom-prompt-section {
@@ -220,6 +260,7 @@
         padding: 4px 8px;
         border-radius: 6px;
         transition: all 0.2s ease;
+        margin-left: auto;
       }
       
       .toggle-prompt:hover {
@@ -250,6 +291,11 @@
       .custom-prompt-input:focus {
         border-color: var(--primary);
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      .custom-prompt-input:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
 
       /* Quick Prompts Section */
@@ -309,6 +355,12 @@
         transform: scale(0.98);
       }
 
+      .quick-prompt-card.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
       .quick-prompt-title {
         font-size: 11px;
         font-weight: 600;
@@ -325,16 +377,53 @@
       /* Input Area */
       .input-section {
         margin-bottom: 16px;
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .input-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .input-title {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+      }
+
+      .clear-input {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 11px;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        flex: none;
+      }
+
+      .clear-input:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
       }
       
       textarea {
         width: 100%;
         min-height: 140px;
-        background: var(--bg-card);
-        border: 2px solid var(--border);
+        background: var(--bg-input);
+        border: 1px solid var(--border);
         color: var(--text-primary);
         padding: 14px;
-        border-radius: 12px;
+        border-radius: 10px;
         font-size: 14px;
         font-family: inherit;
         resize: vertical;
@@ -349,6 +438,11 @@
       textarea:focus {
         border-color: var(--primary);
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      textarea:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
       
       /* Action Buttons */
@@ -384,11 +478,23 @@
         color: white;
         box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
       }
+
+      #run.processing {
+        background: #ef4444;
+      }
+
+      #run.processing:hover {
+        background: #dc2626;
+      }
       
       #run:hover:not(:disabled) {
         background: var(--primary-dark);
         transform: translateY(-1px);
         box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+      }
+
+      #run.processing:hover {
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
       }
       
       #run:active:not(:disabled) {
@@ -429,6 +535,23 @@
         text-transform: uppercase;
         letter-spacing: 0.5px;
         color: var(--text-secondary);
+      }
+
+      .clear-output {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 11px;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        flex: none;
+      }
+
+      .clear-output:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
       }
       
       #out {
@@ -605,6 +728,13 @@
     <div class="container">
       <!-- Control Panel -->
       <div class="control-panel">
+        <div class="control-panel-header">
+          <div class="control-panel-title">Settings</div>
+          <button type="button" class="reset-all" id="reset-all">
+            Reset All
+          </button>
+        </div>
+
         <div class="control-grid">
           <div class="control-group">
             <label class="control-label">
@@ -660,7 +790,7 @@
               <textarea 
                 id="custom-prompt" 
                 class="custom-prompt-input"
-                placeholder="E.g., 'Make it more persuasive', 'Add technical details', 'Simplify for beginners'..."
+                placeholder="E.g., 'Draft an email about this', 'Make it more persuasive', 'Explain with real-world examples'..."
                 aria-label="Custom prompt"
               ></textarea>
             </div>
@@ -677,21 +807,21 @@
                 </button>
               </div>
               <div class="quick-prompts-grid" id="quick-prompts-grid">
-                <div class="quick-prompt-card" data-prompt="Rewrite this using simple words that a 10-year-old would understand. Avoid technical jargon and complex sentences.">
-                  <div class="quick-prompt-title">Simplify</div>
-                  <div class="quick-prompt-desc">For beginners</div>
+                <div class="quick-prompt-card" data-prompt="Explain this like I'm 5 years old, using simple everyday language that anyone can understand.">
+                  <div class="quick-prompt-title">Simplify (ELI5)</div>
+                  <div class="quick-prompt-desc">Easy to understand</div>
                 </div>
-                <div class="quick-prompt-card" data-prompt="Rewrite this in formal academic language with proper structure and scholarly tone. Use precise terminology.">
+                <div class="quick-prompt-card" data-prompt="Expand this with more details, context, and real-world examples to make it more comprehensive.">
+                  <div class="quick-prompt-title">Elaborate</div>
+                  <div class="quick-prompt-desc">Add details & examples</div>
+                </div>
+                <div class="quick-prompt-card" data-prompt="Rewrite in formal academic language with proper structure and scholarly tone. Use precise terminology.">
                   <div class="quick-prompt-title">Academic</div>
-                  <div class="quick-prompt-desc">Formal style</div>
+                  <div class="quick-prompt-desc">Formal scholarly</div>
                 </div>
-                <div class="quick-prompt-card" data-prompt="Make this extremely concise while keeping all key points. Remove unnecessary words and get straight to the point.">
-                  <div class="quick-prompt-title">Concise</div>
-                  <div class="quick-prompt-desc">Brief version</div>
-                </div>
-                <div class="quick-prompt-card" data-prompt="Transform this into a professional, polite email with proper formatting, greeting, and closing.">
-                  <div class="quick-prompt-title">Email</div>
-                  <div class="quick-prompt-desc">Professional</div>
+                <div class="quick-prompt-card" data-prompt="Rewrite this to sound more natural, human, and conversational. Remove robotic or overly formal tone.">
+                  <div class="quick-prompt-title">Humanize</div>
+                  <div class="quick-prompt-desc">Natural & conversational</div>
                 </div>
               </div>
             </div>
@@ -701,6 +831,12 @@
 
       <!-- Input Section -->
       <div class="input-section">
+        <div class="input-header">
+          <div class="input-title">Input</div>
+          <button type="button" class="clear-input" id="clear-input">
+            Clear
+          </button>
+        </div>
         <textarea 
           id="input" 
           placeholder="Paste your text here or use the right-click context menu…"
@@ -711,7 +847,7 @@
       <!-- Action Buttons -->
       <div class="action-buttons">
         <button id="run" type="button">
-          <span>⚡</span>
+          <span>▶</span>
           <span>Run</span>
         </button>
         <button id="copy" type="button">
@@ -724,6 +860,9 @@
       <div class="output-section">
         <div class="output-header">
           <div class="output-title">Output</div>
+          <button type="button" class="clear-output" id="clear-output">
+            Clear
+          </button>
         </div>
         <div id="out" aria-label="Output"></div>
       </div>

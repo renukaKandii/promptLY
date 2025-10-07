@@ -20,6 +20,9 @@
     out: document.getElementById("out"),
     run: document.getElementById("run"),
     copy: document.getElementById("copy"),
+    resetAll: document.getElementById("reset-all"),
+    clearInput: document.getElementById("clear-input"),
+    clearOutput: document.getElementById("clear-output"),
     historyList: document.getElementById("history-list"),
     clearHistory: document.getElementById("clear-history"),
   };
@@ -145,6 +148,33 @@
     }
   });
 
+  // ----- Reset All -----
+  els.resetAll?.addEventListener('click', () => {
+    if (confirm('Reset all settings to default?')) {
+      els.mode.value = "rewrite";
+      els.tone.value = "professional";
+      els.lang.value = "en";
+      els.customPrompt.value = "";
+      setStatus("Settings reset to default", "success");
+    }
+  });
+
+  // ----- Clear Input -----
+  els.clearInput?.addEventListener('click', () => {
+    if (els.input.value && confirm('Clear input text?')) {
+      els.input.value = "";
+      setStatus("Input cleared", "success");
+    }
+  });
+
+  // ----- Clear Output -----
+  els.clearOutput?.addEventListener('click', () => {
+    if (els.out.textContent && confirm('Clear output text?')) {
+      els.out.textContent = "";
+      setStatus("Output cleared", "success");
+    }
+  });
+
   const setStatus = (m, type = "info") => {
     els.status.textContent = m;
     if (type === "success") {
@@ -167,15 +197,35 @@
 
   // ----- Loading State -----
   let isProcessing = false;
+  let shouldStop = false;
   
   const setLoading = (loading) => {
     isProcessing = loading;
-    els.run.disabled = loading;
+    
+    // Disable/enable all controls during processing (except Run button)
+    els.mode.disabled = loading;
+    els.tone.disabled = loading;
+    els.lang.disabled = loading;
+    els.input.disabled = loading;
+    els.customPrompt.disabled = loading;
+    
+    // Disable quick prompt cards
+    document.querySelectorAll('.quick-prompt-card').forEach(card => {
+      if (loading) {
+        card.classList.add('disabled');
+      } else {
+        card.classList.remove('disabled');
+      }
+    });
+    
     if (loading) {
-      els.run.innerHTML = '<span class="loading"></span><span>Processing...</span>';
+      els.run.innerHTML = '<span>⏹</span><span>Stop</span>';
+      els.run.classList.add('processing');
       setStatus("Generating...", "info");
     } else {
-      els.run.innerHTML = '<span>⚡</span><span>Run</span>';
+      els.run.innerHTML = '<span>▶</span><span>Run</span>';
+      els.run.classList.remove('processing');
+      shouldStop = false;
     }
   };
 
@@ -293,6 +343,14 @@
 
   // ---- Handlers ----
   async function onRun() {
+    // If already processing, signal to stop
+    if (isProcessing) {
+      shouldStop = true;
+      setStatus("Stopping...", "warning");
+      LOG("Stop requested");
+      return;
+    }
+
     LOG("Run clicked");
     const text = getInput();
     if (!text) { 
@@ -309,10 +367,26 @@
       customPrompt
     };
 
+    shouldStop = false;
+
     setLoading(true);
     setStatus("Checking built-in AI…", "info");
+    
+    // Check for stop before availability check
+    if (shouldStop) {
+      setLoading(false);
+      setStatus("Stopped by user", "warning");
+      return;
+    }
+    
     const avail = await checkAvailability();
     LOG("availability:", avail);
+
+    if (shouldStop) {
+      setLoading(false);
+      setStatus("Stopped by user", "warning");
+      return;
+    }
 
     if (avail === "downloading") { 
       setStatus("Downloading on-device runtime…", "warning");
@@ -330,19 +404,46 @@
 
     let output;
     if (avail !== "available") {
+      if (shouldStop) {
+        setLoading(false);
+        setStatus("Stopped by user", "warning");
+        return;
+      }
       output = localTransform(payload);
       outText(output);
       setLoading(false);
     } else {
       try {
         setStatus("Generating…", "info");
+        
+        // Note: AI generation can't be interrupted mid-stream
+        // But we check immediately after it completes
         if (window.ai?.createTextSession) {
           output = await generateViaWindowAI(payload);
         } else {
           output = await generateViaLanguageModel(payload);
         }
+        
+        // Check if user clicked stop during generation
+        if (shouldStop) {
+          setLoading(false);
+          setStatus("Generation completed but discarded", "warning");
+          return;
+        }
+        
         outText(output || localTransform(payload));
         setStatus("Done!", "success");
+        
+        // Add to history only if not stopped
+        addToHistory({
+          timestamp: Date.now(),
+          input: text,
+          output: output || "",
+          mode: payload.mode,
+          tone: payload.tone,
+          language: payload.language,
+          customPrompt: customPrompt
+        });
       } catch (e) {
         ERR("runtime generation failed", e);
         output = localTransform(payload);
@@ -352,17 +453,6 @@
         setLoading(false);
       }
     }
-
-    // Add to history
-    addToHistory({
-      timestamp: Date.now(),
-      input: text,
-      output: output || "",
-      mode: payload.mode,
-      tone: payload.tone,
-      language: payload.language,
-      customPrompt: customPrompt
-    });
   }
 
   async function onCopy() {
