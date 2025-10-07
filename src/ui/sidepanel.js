@@ -127,6 +127,11 @@
     card.addEventListener('click', () => {
       const promptText = card.dataset.prompt;
       els.customPrompt.value = promptText;
+      
+      // Highlight selected card
+      document.querySelectorAll('.quick-prompt-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      
       // Show a brief feedback
       setStatus("Quick prompt applied!", "success");
       setTimeout(() => {
@@ -358,6 +363,9 @@
       return; 
     }
 
+    // Clear previous output immediately for clean slate
+    outText("");
+
     const customPrompt = getCustomPrompt();
     const payload = {
       mode: els.mode.value || "rewrite",
@@ -481,15 +489,9 @@
     if (msg?.type === "PROMPTLY_SET_INPUT") {
       LOG("Received text from context menu:", msg.text?.substring(0, 50) + "...");
       els.input.value = msg.text || "";
-      if (msg.mode) {
-        els.mode.value = msg.mode;
-      }
-      if (msg.tone) {
-        els.tone.value = msg.tone;
-      }
-      if (msg.autoRun) {
-        setTimeout(() => onRun(), 300);
-      }
+      // Set defaults but don't auto-run - user clicks Run when ready
+      els.mode.value = "rewrite";
+      els.tone.value = "professional";
     }
   });
 

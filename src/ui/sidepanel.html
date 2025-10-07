@@ -63,16 +63,16 @@
       }
       
       .logo {
-        font-size: 28px;
+        font-size: 22px;
         font-weight: 700;
         letter-spacing: -0.5px;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
         position: relative;
         z-index: 1;
       }
       
       .tagline {
-        font-size: 13px;
+        font-size: 11px;
         opacity: 0.9;
         font-weight: 400;
         position: relative;
@@ -82,7 +82,7 @@
       /* Status Bar */
       .status-bar {
         background: var(--bg-card);
-        padding: 12px 20px;
+        padding: 10px 20px;
         border-bottom: 1px solid var(--border);
         display: flex;
         align-items: center;
@@ -125,15 +125,15 @@
       
       /* Main Content */
       .container {
-        padding: 20px;
+        padding: 16px;
       }
       
       /* Control Panel */
       .control-panel {
         background: var(--bg-card);
         border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 16px;
+        padding: 16px;
+        margin-bottom: 14px;
         border: 1px solid var(--border);
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
@@ -142,8 +142,8 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 16px;
-        padding-bottom: 12px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
         border-bottom: 1px solid var(--border);
       }
 
@@ -176,14 +176,14 @@
       .control-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin-bottom: 12px;
+        gap: 10px;
+        margin-bottom: 10px;
       }
       
       .control-group {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
       }
       
       .control-group.full-width {
@@ -209,7 +209,7 @@
         background: var(--bg-input);
         border: 1px solid var(--border);
         color: var(--text-primary);
-        padding: 10px 12px;
+        padding: 8px 10px;
         border-radius: 10px;
         font-size: 14px;
         cursor: pointer;
@@ -273,14 +273,14 @@
         background: var(--bg-input);
         border: 1px solid var(--border);
         color: var(--text-primary);
-        padding: 10px 12px;
+        padding: 8px 10px;
         border-radius: 10px;
         font-size: 13px;
         font-family: inherit;
         resize: none;
         transition: all 0.2s ease;
         outline: none;
-        min-height: 55px;
+        min-height: 50px;
         margin-bottom: 8px;
       }
       
@@ -361,6 +361,11 @@
         pointer-events: none;
       }
 
+      .quick-prompt-card.selected {
+        border: 2px solid var(--primary);
+        background: rgba(99, 102, 241, 0.15);
+      }
+
       .quick-prompt-title {
         font-size: 11px;
         font-weight: 600;
@@ -376,10 +381,10 @@
       
       /* Input Area */
       .input-section {
-        margin-bottom: 16px;
+        margin-bottom: 14px;
         background: var(--bg-card);
         border-radius: 16px;
-        padding: 20px;
+        padding: 16px;
         border: 1px solid var(--border);
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
@@ -418,11 +423,11 @@
       
       textarea {
         width: 100%;
-        min-height: 140px;
+        min-height: 120px;
         background: var(--bg-input);
         border: 1px solid var(--border);
         color: var(--text-primary);
-        padding: 14px;
+        padding: 12px;
         border-radius: 10px;
         font-size: 14px;
         font-family: inherit;
@@ -449,7 +454,7 @@
       .action-buttons {
         display: flex;
         gap: 12px;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
       }
       
       button {
@@ -790,7 +795,7 @@
               <textarea 
                 id="custom-prompt" 
                 class="custom-prompt-input"
-                placeholder="E.g., 'Draft an email about this', 'Make it more persuasive', 'Explain with real-world examples'..."
+                placeholder="E.g., 'Draft an email about this', 'Write an academic style report', 'Explain with real-world examples'..."
                 aria-label="Custom prompt"
               ></textarea>
             </div>
@@ -815,9 +820,9 @@
                   <div class="quick-prompt-title">Elaborate</div>
                   <div class="quick-prompt-desc">Add details & examples</div>
                 </div>
-                <div class="quick-prompt-card" data-prompt="Rewrite in formal academic language with proper structure and scholarly tone. Use precise terminology.">
-                  <div class="quick-prompt-title">Academic</div>
-                  <div class="quick-prompt-desc">Formal scholarly</div>
+                <div class="quick-prompt-card" data-prompt="This is an email I received. Write MY reply back to THEM (not to me). Be professional, thank them if appropriate, and respond to their key points naturally.">
+                  <div class="quick-prompt-title">Reply to Email</div>
+                  <div class="quick-prompt-desc">Professional reply</div>
                 </div>
                 <div class="quick-prompt-card" data-prompt="Rewrite this to sound more natural, human, and conversational. Remove robotic or overly formal tone.">
                   <div class="quick-prompt-title">Humanize</div>

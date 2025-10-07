@@ -28,13 +28,12 @@ const DEFAULT_OUTPUT_LANG = "en";
 
 // ---------- install / menus / side panel ----------
 chrome.runtime.onInstalled.addListener(async () => {
-  const items = [
-    { id: "promptly_rewrite",   title: "promptLY • Rewrite" },
-    { id: "promptly_summarize", title: "promptLY • Summarize" },
-    { id: "promptly_translate", title: "promptLY • Translate to English" },
-    { id: "promptly_proofread", title: "promptLY • Proofread" }
-  ];
-  items.forEach(i => chrome.contextMenus.create({ ...i, contexts: ["selection"] }));
+  // Single context menu item - much cleaner!
+  chrome.contextMenus.create({
+    id: "promptly_open",
+    title: "promptLY",
+    contexts: ["selection"]
+  });
 
   // Open the Side Panel when the toolbar icon is clicked
   if (chrome.sidePanel?.setPanelBehavior) {
@@ -54,13 +53,11 @@ function sendToast(tabId, text) {
   });
 }
 
-// Context menu click handler - now opens side panel instead of inline replace
+// Context menu click handler - opens side panel with selected text
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (!tab?.id || !info.selectionText) return;
-  const id = String(info.menuItemId).toLowerCase();
-  const mode = id.replace(/^promptly_?/i, ""); // rewrite/summarize/translate/proofread
 
-  log(`Context menu clicked: ${mode}, opening side panel...`);
+  log(`Context menu clicked, opening side panel...`);
 
   try {
     // Open the side panel
@@ -71,14 +68,12 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       chrome.runtime.sendMessage({
         type: "PROMPTLY_SET_INPUT",
         text: info.selectionText,
-        mode: mode,
-        tone: "professional",
-        autoRun: true // Auto-run when opened from context menu
+        autoRun: false // Do NOT auto-run - let user configure and click Run
       });
     }, 300);
     
     // Show toast notification
-    sendToast(tab.id, `promptLY: Opening ${mode} mode...`);
+    sendToast(tab.id, `promptLY: Opening side panel...`);
   } catch (e) {
     log("Error opening side panel:", e);
     sendToast(tab.id, "promptLY: Could not open side panel");
