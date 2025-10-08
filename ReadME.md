@@ -2,7 +2,17 @@
 
 <div align="center">
 
+![promptLY Logo](icons/icon.png)
+
 **Your thoughts, refined — instantly**
+
+Need to humanize AI text? No internet? Don't want to switch tabs? **Your AI is right here.**
+
+Select text → Right-click → promptLY. Transform anything instantly. Reply to emails. Simplify complex content. All on-device, completely private.
+
+**No internet needed.** **No data leaves your system.** **Built-in AI making miracles happen.**
+
+---
 
 A Chrome extension that transforms your writing using on-device AI (Gemini Nano) — completely private, no cloud, no subscriptions.
 
@@ -16,6 +26,31 @@ A Chrome extension that transforms your writing using on-device AI (Gemini Nano)
 
 ---
 
+## 💭 Why promptLY?
+
+**Ever been stuck in these situations?**
+
+- 📧 **Need to reply to an email?** Don't want to open ChatGPT, copy-paste, wait, copy-paste back...
+- 🤖 **AI text sounds robotic?** Need to humanize it but switching tabs breaks your flow...
+- ✈️ **On a plane with no WiFi?** All those cloud AI tools are useless...
+- 🔒 **Handling sensitive data?** Company policy says no external AI...
+- 💸 **Hit your free limit?** ChatGPT capped and you need one more rewrite...
+- ⚡ **Just want it quick?** Select → Right-click → Done. No tab juggling...
+
+**promptLY solves all of this.**
+
+Your AI lives in Chrome. No internet after setup. No data leaving your device. No subscriptions. No limits.
+
+**Need to humanize?** Right-click → promptLY → Humanize → Run. Done.
+
+**Need to reply to email?** Select → Right-click → promptLY → Reply to Email → Run. Send.
+
+**Working offline?** Built-in AI doesn't need WiFi. Everything stays on your laptop.
+
+It's AI, but **private. Fast. Always there. Right where you need it.**
+
+---
+
 ## 🎯 What is promptLY?
 
 promptLY is a **text transformation tool** that leverages Chrome's built-in AI to help you rewrite, summarize, translate, and proofread content — all **100% on-device** with zero data sent to external servers.
@@ -26,31 +61,6 @@ promptLY is a **text transformation tool** that leverages Chrome's built-in AI t
 - ✅ Draft professional emails
 - ✅ Explain complex concepts simply
 - ✅ And much more!
-
----
-
-## 💭 The Problem We're Solving
-
-Ever been stuck in these situations?
-
-- 📧 **Need to reply to an email?** Don't want to open ChatGPT, copy-paste, wait for response, copy-paste back...
-- 🤖 **AI-generated text sounds robotic?** Need to humanize it but switching tabs breaks your flow...
-- ✈️ **Working on a plane with no WiFi?** All those cloud AI tools are useless now...
-- 🔒 **Handling sensitive data?** Company policy says no external AI tools...
-- 💸 **Hit your ChatGPT limit?** Free tier ran out and you just need one more rewrite...
-- ⚡ **Just want something quick?** Select text → Right-click → Done. No tab switching, no copy-paste dance...
-
-**promptLY solves all of this.**
-
-Your AI is right here, built into Chrome. No internet needed after setup. No data leaving your system. No subscriptions. No limits. Just select text, right-click, and transform.
-
-**Need to humanize a paragraph?** Right-click → promptLY → Humanize → Run. Done.
-
-**Need to reply to an email?** Select the email → Right-click → promptLY → Reply to Email → Run. Copy. Send.
-
-**Need to work on a 10-hour flight?** Chrome's built-in AI doesn't need WiFi. Your data never leaves your laptop anyway.
-
-It's AI, but **private. Fast. Always available. Right where you need it.**
 
 ---
 
@@ -160,7 +170,7 @@ You need **Google Chrome version 127 or higher**. Check your version:
 1. **Download the Extension:**
    - Clone this repository or download as ZIP
    ```bash
-   git clone https://github.com/yourusername/promptly.git
+   git clone https://github.com/renukaKandii/promptly.git
    ```
    - Or download ZIP and extract it
 
@@ -611,12 +621,12 @@ Occasionally (≈1% of cases) the AI may:
 
 ## 🤝 Contributing
 
-This is currently a **solo project**, but I genuinely appreciate contributions!
+This is currently a **solo project**, and I prefer to maintain the codebase myself. However, **your feedback and ideas are incredibly valuable!**
 
-### How to Contribute
+### How You Can Help
 
 **Found a Bug?**
-1. Check if it's already reported in [Issues](link-to-issues)
+1. Check if it's already reported in [Issues](https://github.com/renukaKandii/promptly/issues)
 2. If not, open a new issue with:
    - Clear description of the bug
    - Steps to reproduce
@@ -625,89 +635,44 @@ This is currently a **solo project**, but I genuinely appreciate contributions!
    - Screenshots if applicable
 
 **Have a Feature Idea?**
-1. Open a [Discussion](link-to-discussions)
-2. Describe the feature and use case
-3. Community feedback helps prioritize development!
+1. Open an [Issue](https://github.com/renukaKandii/promptly/issues) with the "feature request" label
+2. Describe the feature and why it would be useful
+3. Share your use case
+4. I'll review and consider it for future updates!
 
-**Want to Code?**
-1. Fork the repository
-2. Create a feature branch:
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. Make your changes
-4. Test thoroughly in Chrome Dev/Canary
-5. Commit with clear messages:
-   ```bash
-   git commit -m 'feat: add amazing feature'
-   ```
-6. Push to your fork:
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-7. Open a Pull Request with:
-   - Description of changes
-   - Why it's useful
-   - Any testing done
+**Want to Help Test?**
+- Try new features and report issues
+- Test on different operating systems
+- Share your experience and suggestions
+- Help improve documentation
 
-### Contribution Ideas
+**Spread the Word:**
+- ⭐ Star the repository
+- 📢 Share with friends and colleagues
+- 📝 Write about your experience
+- 💬 Discuss on social media
 
-**Easy:**
-- Fix typos in documentation
-- Improve README clarity
-- Add more example custom instructions
-- Test on different OS/Chrome versions
+### What I'm NOT Looking For
 
-**Medium:**
-- Add new Quick Prompts
-- Improve UI/UX design
-- Create additional themes
-- Add keyboard shortcuts
+- ❌ Code contributions or pull requests (I handle all development)
+- ❌ Major architectural changes
+- ❌ Feature implementations without prior discussion
 
-**Advanced:**
-- Implement new features from roadmap
-- Optimize AI prompt engineering
-- Add support for more languages
-- Build integrations (Google Docs, etc.)
+### What I AM Looking For
 
-### Code Style
-
-- Use clear, descriptive variable names
-- Comment complex logic
-- Follow existing code structure
-- Test in multiple scenarios before submitting
+- ✅ Bug reports with clear reproduction steps
+- ✅ Feature suggestions and use cases
+- ✅ User experience feedback
+- ✅ Documentation improvements
+- ✅ Testing on different systems
+- ✅ Ideas for Quick Prompts
+- ✅ Custom instruction examples that work well
 
 ---
 
 ## 📝 License
 
-This project is licensed under the **MIT License**.
-
-```
-MIT License
-
-Copyright (c) 2024 [Your Name]
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-See the [LICENSE](LICENSE) file for full details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -715,7 +680,8 @@ See the [LICENSE](LICENSE) file for full details.
 
 - **Chrome Built-in AI Team** - For making on-device AI accessible to developers
 - **Gemini Nano** - The powerful language model that powers promptLY
-- **Claude AI (Anthropic)** - For invaluable assistance during development, problem-solving, and iterative improvements
+- **Claude AI (Anthropic)** - For invaluable assistance during development, debugging, and iterative improvements
+- **ChatGPT (OpenAI)** - For help with initial brainstorming and problem-solving
 - **Early Testers** - For feedback and bug reports that made this better
 - **Open Source Community** - For inspiration and best practices
 - **You!** - For using promptLY and supporting privacy-focused tools
@@ -727,16 +693,15 @@ See the [LICENSE](LICENSE) file for full details.
 ### Get Help
 
 - 📖 **Documentation:** You're reading it!
-- 🐛 **Report Bugs:** [GitHub Issues](link-to-issues)
-- 💡 **Feature Requests:** [GitHub Discussions](link-to-discussions)
-- ❓ **Questions:** [Discussions Q&A](link-to-discussions)
+- 🐛 **Report Bugs:** [GitHub Issues](https://github.com/renukaKandii/promptly/issues)
+- 💡 **Feature Requests:** [GitHub Issues](https://github.com/renukaKandii/promptly/issues)
+- ❓ **Questions:** Feel free to open an issue with your question!
 
 ### Connect
 
-- 📧 **Email:** your-email@example.com
-- 🐦 **Twitter/X:** [@yourhandle](https://twitter.com/yourhandle)
-- 💼 **LinkedIn:** [Your Name](https://linkedin.com/in/yourprofile)
-- 🌐 **Website:** [yourwebsite.com](https://yourwebsite.com)
+- 📧 **Email:** knrenu4601@gmail.com
+- 💼 **LinkedIn:** [Naga Renuka Kandi](https://www.linkedin.com/in/naga-renuka-kandi/)
+- 🐙 **GitHub:** [@renukaKandii](https://github.com/renukaKandii)
 
 ### Response Time
 
@@ -745,7 +710,7 @@ Since this is a solo project:
 - **Feature requests:** May take longer to evaluate
 - **Pull requests:** Reviewed within a week
 
-Please be patient! I have a day job and work on this in my free time. 😊
+Please be patient! I work on this in my free time. 😊
 
 ---
 
@@ -757,7 +722,6 @@ If you find promptLY useful, here's how you can show support:
 - 🐛 **Report bugs** - Makes it better for everyone
 - 💡 **Share ideas** - Your feedback shapes the roadmap
 - 📢 **Tell others** - Share on social media, blogs, forums
-- ☕ **Buy me a coffee** - [Ko-fi link](link-to-kofi) (optional, not required!)
 - 📝 **Write a review** - When it's on Chrome Web Store
 
 **Every bit of support motivates me to keep improving promptLY!**
@@ -794,23 +758,18 @@ promptLY is built with privacy as the #1 priority:
 **What Chrome sees:**
 - Chrome's built-in AI processes your text locally
 - Google may collect anonymous usage statistics about the AI feature itself (not your content)
-- See [Chrome's AI Privacy](https://support.google.com/chrome/answer/your-privacy) for details
+- See [Chrome's AI Privacy](https://support.google.com/chrome) for details
 
 **Open Source:**
 - You can audit the entire codebase
 - No hidden tracking or data collection
 - See `manifest.json` for all permissions requested
 
-**Your rights:**
-- Your text is yours
-- Delete history anytime (click "Clear All")
-- Uninstall removes everything
-
 ---
 
 ## ⚠️ Disclaimer
 
-promptLY is an **experimental tool** using early-stage browser AI APIs. 
+promptLY is an **experimental tool** using browser AI APIs. 
 
 **Important notes:**
 
@@ -820,8 +779,7 @@ promptLY is an **experimental tool** using early-stage browser AI APIs.
 - Not suitable for critical legal, medical, or financial documents without human review
 
 **Reliability:**
-- Chrome's built-in AI is still in development
-- APIs may change, break, or behave differently in future Chrome versions
+- Chrome's built-in AI APIs may change in future versions
 - Features may stop working if Chrome updates affect AI availability
 
 **Responsibility:**
@@ -829,22 +787,11 @@ promptLY is an **experimental tool** using early-stage browser AI APIs.
 - I am not liable for any consequences of using AI-generated text
 - Use professional judgment for business-critical content
 
-**Browser Dependency:**
-- Requires Chrome Dev/Canary with specific flags enabled
-- May not work on all systems or configurations
-- Performance varies by device capabilities
-
-**No Guarantees:**
-- Provided "as-is" without warranties
-- I make no promises about uptime, accuracy, or fitness for purpose
-- See MIT License for full legal disclaimer
-
 **Best Practices:**
 - ✅ Review all AI outputs before using
 - ✅ Fact-check important information
 - ✅ Use as a writing aid, not a replacement for human judgment
 - ✅ Keep critical documents backed up separately
-- ✅ Test thoroughly for your specific use cases
 
 ---
 
@@ -883,9 +830,6 @@ A: No! All processing happens locally on your device. Zero data leaves your mach
 **Q: Can my employer/school see what I'm transforming?**
 A: No. Unlike cloud AI tools, promptLY doesn't send data anywhere, so there's no server logs to monitor.
 
-**Q: Does Google/Anthropic see my prompts?**
-A: No. Your text stays on your device. Only anonymous AI usage statistics may be collected by Chrome itself (not your content).
-
 ### Usage
 
 **Q: Why didn't "Reply to Email" work correctly?**
@@ -893,26 +837,6 @@ A: In rare cases (~1%), the AI may misinterpret sender/recipient. Try clicking R
 
 **Q: Can I use this for work/commercial purposes?**
 A: Yes! MIT License allows commercial use. However, always review AI outputs for professional contexts.
-
-**Q: How do I export my history?**
-A: Currently, history is browser-local only. Export feature is planned for future versions.
-
-**Q: Can I customize Quick Prompts?**
-A: Not yet, but custom Quick Prompts are planned for a future update. For now, use Custom Instructions.
-
-### Troubleshooting
-
-**Q: promptLY won't install. What do I do?**
-A: Make sure you're using Chrome 127+ (check chrome://settings/help), and that you've enabled Developer Mode in `chrome://extensions/`.
-
-**Q: The AI says "not available". How do I fix this?**
-A: Check that you've enabled the correct flags and restarted Chrome. Run the verification command in DevTools.
-
-**Q: It says "after-download". How long does download take?**
-A: Usually 5-10 minutes depending on your internet speed. You can check progress in DevTools console.
-
-**Q: Why is processing slow?**
-A: Large texts or complex instructions take longer. Also depends on your device's CPU/RAM. Close other tabs to free up resources.
 
 ---
 
@@ -938,11 +862,6 @@ A: Large texts or complex instructions take longer. Also depends on your device'
 ✅ "Extract 5 bullet points, each under 15 words"
 ```
 
-**Combine Multiple Instructions:**
-```
-✅ "Rewrite this email in a friendly but professional tone, keep it under 100 words, and add a clear call-to-action at the end"
-```
-
 ### Maximizing Output Quality
 
 1. **Start with a good input** - AI can't fix unclear source material
@@ -957,8 +876,7 @@ A: Large texts or complex instructions take longer. Also depends on your device'
 1. Select the email you received
 2. Right-click → promptLY
 3. Click "Reply to Email"
-4. Click Run
-5. Copy and send!
+4. Click Run → Copy → Send!
 
 **Learning from Articles:**
 1. Select a complex paragraph
@@ -966,34 +884,13 @@ A: Large texts or complex instructions take longer. Also depends on your device'
 3. Click "Simplify (ELI5)"
 4. Understand easily!
 
-**Multilingual Communication:**
-1. Write in English
-2. Set Language to Español
-3. Select Translate mode
-4. Get Spanish version instantly
-
----
-
-## 📊 Version History
-
-### v1.0.0 (Current)
-- 🎉 Initial release
-- ✅ 4 core modes (Rewrite, Summarize, Translate, Proofread)
-- ✅ 4 Quick Prompts (Simplify, Elaborate, Reply to Email, Humanize)
-- ✅ Custom Instructions support
-- ✅ History with 10-item limit
-- ✅ Context menu integration
-- ✅ Stop button functionality
-- ✅ Visual feedback for selected prompts
-- ✅ Auto-clear output on Run
-
 ---
 
 <div align="center">
 
 ---
 
-**Built with ❤️ and ☕ by [Your Name]**
+**Built with ❤️ and ☕ by Naga Renuka Kandi**
 
 *Privacy-first • On-device • Open source*
 
@@ -1001,6 +898,6 @@ A: Large texts or complex instructions take longer. Also depends on your device'
 
 ⭐ **Star this repo if you find it useful!** ⭐
 
-[Report Bug](link-to-issues) • [Request Feature](link-to-discussions) • [Buy Coffee](link-to-kofi)
+[Report Bug](https://github.com/renukaKandii/promptly/issues) • [Request Feature](https://github.com/renukaKandii/promptly/issues) • [Connect on LinkedIn](https://www.linkedin.com/in/naga-renuka-kandi/)
 
 </div>
