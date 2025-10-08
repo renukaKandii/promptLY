@@ -129,6 +129,10 @@
       const promptText = card.dataset.prompt;
       els.customPrompt.value = promptText;
       
+      // Auto-expand Custom Instructions to show the prompt
+      els.customPromptWrapper.classList.remove('hidden');
+      els.togglePrompt.textContent = '− Hide Custom';
+      
       // Highlight selected card
       document.querySelectorAll('.quick-prompt-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
@@ -239,7 +243,7 @@
     if (loading) {
       els.run.innerHTML = '<span>⏹</span><span>Stop</span>';
       els.run.classList.add('processing');
-      setStatus("Generating...", "info");
+      setInputStatus("Generating...", "processing", "⚡");
     } else {
       els.run.innerHTML = '<span>▶</span><span>Run</span>';
       els.run.classList.remove('processing');
@@ -300,8 +304,8 @@
     // Create session with temperature for faster, more deterministic responses
     const session = await window.ai.createTextSession({
       systemPrompt: buildSystem(language, tone),
-      temperature: 0.7, // Lower temperature for faster responses
-      topK: 3 // Limit token sampling for speed
+      temperature: 0.7,
+      topK: 3
     });
     
     const prompt = buildUserPrompt(mode, language, tone, text, customPrompt);
@@ -413,7 +417,7 @@
     }
 
     if (avail === "downloading") { 
-      setStatus("Downloading on-device runtime…", "warning");
+      setStatus("Downloading AI model…", "warning");
       setHint("downloading");
       setInputStatus("Downloading AI model...", "warning", "⏬");
     } else if (avail === "available") { 
@@ -421,11 +425,11 @@
       setHint("built-in AI");
       setInputStatus("Generating...", "processing", "⚡");
     } else if (avail === "installed" || avail === "ready") { 
-      setStatus("Initializing on-device runtime…", "info");
+      setStatus("Initializing AI…", "info");
       setHint("initializing");
       setInputStatus("Initializing...", "processing", "🔄");
     } else { 
-      setStatus("Ready (fallback mode)", "warning");
+      setStatus("AI not available - local mode", "warning");
       setHint("local preview");
       setInputStatus("Using local fallback...", "warning", "⚠️");
     }
@@ -447,8 +451,6 @@
       try {
         setInputStatus("Generating...", "processing", "⚡");
         
-        // Note: AI generation can't be interrupted mid-stream
-        // But we check immediately after it completes
         if (window.ai?.createTextSession) {
           output = await generateViaWindowAI(payload);
         } else {
@@ -524,6 +526,10 @@
     setStatus("Checking built-in AI…", "info");
     els.run?.addEventListener("click", onRun);
     els.copy?.addEventListener("click", onCopy);
+
+    // Hide Custom Instructions by default
+    els.customPromptWrapper.classList.add('hidden');
+    els.togglePrompt.textContent = '+ Show Custom';
 
     // Load history
     await loadHistory();

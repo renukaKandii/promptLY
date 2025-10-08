@@ -280,7 +280,7 @@
         resize: none;
         transition: all 0.2s ease;
         outline: none;
-        min-height: 50px;
+        min-height: 65px;
         margin-bottom: 8px;
       }
       
@@ -838,11 +838,11 @@
                 Custom Instructions
               </label>
               <button type="button" class="toggle-prompt" id="toggle-prompt">
-                − Hide Custom
+                + Show Custom
               </button>
             </div>
             
-            <div class="custom-prompt-wrapper" id="custom-prompt-wrapper">
+            <div class="custom-prompt-wrapper hidden" id="custom-prompt-wrapper">
               <textarea 
                 id="custom-prompt" 
                 class="custom-prompt-input"
@@ -932,7 +932,7 @@
         <div class="history-header">
           <div class="history-title">
             <span>📜</span>
-            Recent History
+            <span>Recent History</span>
           </div>
           <button type="button" class="clear-history" id="clear-history">
             Clear All
