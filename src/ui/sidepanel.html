@@ -344,6 +344,7 @@
         cursor: pointer;
         transition: all 0.2s ease;
         text-align: left;
+        position: relative;
       }
 
       .quick-prompt-card:hover {
@@ -377,6 +378,40 @@
         font-size: 9px;
         color: var(--text-muted);
         line-height: 1.2;
+      }
+
+      /* Tooltip for Email Quick Prompt */
+      .quick-prompt-card[data-tooltip]:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 8px;
+        padding: 8px 12px;
+        background: var(--bg-card);
+        color: var(--text-primary);
+        border: 1px solid var(--primary-light);
+        border-radius: 8px;
+        font-size: 10px;
+        white-space: normal;
+        width: 200px;
+        text-align: center;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        line-height: 1.4;
+      }
+
+      .quick-prompt-card[data-tooltip]:hover::before {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 2px;
+        border: 6px solid transparent;
+        border-top-color: var(--primary-light);
+        z-index: 1001;
       }
       
       /* Input Area */
@@ -871,7 +906,9 @@
                   <div class="quick-prompt-title">Elaborate</div>
                   <div class="quick-prompt-desc">Add details & examples</div>
                 </div>
-                <div class="quick-prompt-card" data-prompt="Write my professional email reply to this message. I am responding to them, not the other way around. Keep a professional tone, thank them if appropriate, and respond to their key points naturally.">
+                <div class="quick-prompt-card" 
+                     data-prompt="Write my professional email reply to this message. I am responding to them, not the other way around. Keep a professional tone, thank them if appropriate, and respond to their key points naturally."
+                     data-tooltip="💡 Tip: Select the entire email (from 'Dear...' to signature) for best results">
                   <div class="quick-prompt-title">Reply to Email</div>
                   <div class="quick-prompt-desc">Professional reply</div>
                 </div>
@@ -932,7 +969,7 @@
         <div class="history-header">
           <div class="history-title">
             <span>📜</span>
-            <span>Recent History</span>
+            Recent History
           </div>
           <button type="button" class="clear-history" id="clear-history">
             Clear All
