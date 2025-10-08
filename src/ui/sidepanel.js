@@ -8,6 +8,7 @@
     status: document.getElementById("promptly-status"),
     statusIndicator: document.getElementById("status-indicator"),
     hint: document.getElementById("runtime-hint"),
+    inputStatus: document.getElementById("input-status"),
     mode: document.getElementById("mode"),
     tone: document.getElementById("tone"),
     lang: document.getElementById("lang"),
@@ -132,14 +133,9 @@
       document.querySelectorAll('.quick-prompt-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
       
-      // Show a brief feedback
-      setStatus("Quick prompt applied!", "success");
-      setTimeout(() => {
-        checkAvailability().then(status => {
-          if (status === "available") setStatus("Ready", "success");
-          else setStatus("Ready (fallback mode)", "warning");
-        });
-      }, 1500);
+      // Show feedback in input status
+      setInputStatus("Quick prompt applied!", "success", "✨");
+      setTimeout(() => setInputStatus(""), 3000);
     });
   });
 
@@ -149,7 +145,8 @@
       history = [];
       await saveHistory();
       renderHistory();
-      setStatus("History cleared", "success");
+      setInputStatus("History cleared", "success", "✅");
+      setTimeout(() => setInputStatus(""), 3000);
     }
   });
 
@@ -160,7 +157,8 @@
       els.tone.value = "professional";
       els.lang.value = "en";
       els.customPrompt.value = "";
-      setStatus("Settings reset to default", "success");
+      setInputStatus("Settings reset", "success", "✅");
+      setTimeout(() => setInputStatus(""), 3000);
     }
   });
 
@@ -168,7 +166,8 @@
   els.clearInput?.addEventListener('click', () => {
     if (els.input.value && confirm('Clear input text?')) {
       els.input.value = "";
-      setStatus("Input cleared", "success");
+      setInputStatus("Input cleared", "success", "✅");
+      setTimeout(() => setInputStatus(""), 3000);
     }
   });
 
@@ -176,11 +175,13 @@
   els.clearOutput?.addEventListener('click', () => {
     if (els.out.textContent && confirm('Clear output text?')) {
       els.out.textContent = "";
-      setStatus("Output cleared", "success");
+      setInputStatus("Output cleared", "success", "✅");
+      setTimeout(() => setInputStatus(""), 3000);
     }
   });
 
   const setStatus = (m, type = "info") => {
+    // Top status bar (AI availability only)
     els.status.textContent = m;
     if (type === "success") {
       els.statusIndicator.style.background = "#10b981";
@@ -192,6 +193,18 @@
       els.statusIndicator.style.background = "#6366f1";
       els.statusIndicator.classList.remove("warning");
     }
+  };
+
+  const setInputStatus = (m, type = "info", icon = "") => {
+    // Input header status (action feedback)
+    if (!m) {
+      els.inputStatus.textContent = "";
+      els.inputStatus.className = "input-status";
+      return;
+    }
+    
+    els.inputStatus.innerHTML = icon ? `<span class="input-status-icon">${icon}</span>${m}` : m;
+    els.inputStatus.className = `input-status ${type}`;
   };
   
   const setHint = (m) => els.hint && (els.hint.textContent = m);
@@ -351,7 +364,7 @@
     // If already processing, signal to stop
     if (isProcessing) {
       shouldStop = true;
-      setStatus("Stopping...", "warning");
+      setInputStatus("Stopping...", "warning", "⏹");
       LOG("Stop requested");
       return;
     }
@@ -359,7 +372,8 @@
     LOG("Run clicked");
     const text = getInput();
     if (!text) { 
-      setStatus("Please paste some text first.", "warning"); 
+      setInputStatus("Please paste some text first", "warning", "⚠️");
+      setTimeout(() => setInputStatus(""), 3000);
       return; 
     }
 
@@ -378,12 +392,13 @@
     shouldStop = false;
 
     setLoading(true);
-    setStatus("Checking built-in AI…", "info");
+    setInputStatus("Checking AI...", "processing", "🔄");
     
     // Check for stop before availability check
     if (shouldStop) {
       setLoading(false);
-      setStatus("Stopped by user", "warning");
+      setInputStatus("Stopped by user", "warning", "⏹");
+      setTimeout(() => setInputStatus(""), 3000);
       return;
     }
     
@@ -392,37 +407,45 @@
 
     if (shouldStop) {
       setLoading(false);
-      setStatus("Stopped by user", "warning");
+      setInputStatus("Stopped by user", "warning", "⏹");
+      setTimeout(() => setInputStatus(""), 3000);
       return;
     }
 
     if (avail === "downloading") { 
       setStatus("Downloading on-device runtime…", "warning");
       setHint("downloading");
+      setInputStatus("Downloading AI model...", "warning", "⏬");
     } else if (avail === "available") { 
-      setStatus("On-device runtime available.", "success");
+      setStatus("Ready", "success");
       setHint("built-in AI");
+      setInputStatus("Generating...", "processing", "⚡");
     } else if (avail === "installed" || avail === "ready") { 
       setStatus("Initializing on-device runtime…", "info");
       setHint("initializing");
+      setInputStatus("Initializing...", "processing", "🔄");
     } else { 
-      setStatus("No on-device runtime — using local fallback.", "warning");
+      setStatus("Ready (fallback mode)", "warning");
       setHint("local preview");
+      setInputStatus("Using local fallback...", "warning", "⚠️");
     }
 
     let output;
     if (avail !== "available") {
       if (shouldStop) {
         setLoading(false);
-        setStatus("Stopped by user", "warning");
+        setInputStatus("Stopped by user", "warning", "⏹");
+        setTimeout(() => setInputStatus(""), 3000);
         return;
       }
       output = localTransform(payload);
       outText(output);
       setLoading(false);
+      setInputStatus("Done!", "success", "✅");
+      setTimeout(() => setInputStatus(""), 3000);
     } else {
       try {
-        setStatus("Generating…", "info");
+        setInputStatus("Generating...", "processing", "⚡");
         
         // Note: AI generation can't be interrupted mid-stream
         // But we check immediately after it completes
@@ -435,12 +458,14 @@
         // Check if user clicked stop during generation
         if (shouldStop) {
           setLoading(false);
-          setStatus("Generation completed but discarded", "warning");
+          setInputStatus("Generation completed but discarded", "warning", "⏹");
+          setTimeout(() => setInputStatus(""), 3000);
           return;
         }
         
         outText(output || localTransform(payload));
-        setStatus("Done!", "success");
+        setInputStatus("Done!", "success", "✅");
+        setTimeout(() => setInputStatus(""), 3000);
         
         // Add to history only if not stopped
         addToHistory({
@@ -456,7 +481,8 @@
         ERR("runtime generation failed", e);
         output = localTransform(payload);
         outText(output);
-        setStatus("Local fallback shown (runtime error).", "warning");
+        setInputStatus("Error - using fallback", "error", "⚠️");
+        setTimeout(() => setInputStatus(""), 3000);
       } finally {
         setLoading(false);
       }
@@ -466,21 +492,18 @@
   async function onCopy() {
     const s = els.out.textContent || "";
     if (!s) { 
-      setStatus("Nothing to copy.", "warning"); 
+      setInputStatus("Nothing to copy", "warning", "⚠️");
+      setTimeout(() => setInputStatus(""), 3000);
       return; 
     }
     try { 
       await navigator.clipboard.writeText(s); 
-      setStatus("Copied to clipboard!", "success");
-      setTimeout(() => {
-        checkAvailability().then(status => {
-          if (status === "available") setStatus("Ready", "success");
-          else setStatus("Ready (fallback mode)", "warning");
-        });
-      }, 2000);
+      setInputStatus("Copied to clipboard!", "success", "✅");
+      setTimeout(() => setInputStatus(""), 3000);
     } catch (e) { 
       ERR("copy failed", e); 
-      setStatus("Copy failed.", "warning"); 
+      setInputStatus("Copy failed", "error", "❌");
+      setTimeout(() => setInputStatus(""), 3000);
     }
   }
 
@@ -510,13 +533,13 @@
       setStatus("Ready", "success"); 
       setHint("built-in AI"); 
     } else if (s === "downloading") { 
-      setStatus("Downloading on-device runtime…", "warning"); 
+      setStatus("Downloading AI model…", "warning"); 
       setHint("downloading"); 
     } else if (s === "installed" || s === "ready") { 
-      setStatus("Initializing on-device runtime…", "info"); 
+      setStatus("Initializing AI…", "info"); 
       setHint("initializing"); 
     } else { 
-      setStatus("Ready (fallback mode)", "warning"); 
+      setStatus("AI not available - local mode", "warning"); 
       setHint("local preview"); 
     }
   })();

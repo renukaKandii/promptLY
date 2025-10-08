@@ -394,6 +394,8 @@
         align-items: center;
         justify-content: space-between;
         margin-bottom: 12px;
+        gap: 8px;
+        min-height: 20px;
       }
 
       .input-title {
@@ -402,6 +404,43 @@
         text-transform: uppercase;
         letter-spacing: 0.5px;
         color: var(--text-secondary);
+        flex-shrink: 0;
+      }
+
+      .input-status {
+        font-size: 11px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .input-status.success {
+        color: var(--success);
+      }
+
+      .input-status.processing {
+        color: var(--primary-light);
+      }
+
+      .input-status.warning {
+        color: var(--warning);
+      }
+
+      .input-status.error {
+        color: #ef4444;
+      }
+
+      .input-status-icon {
+        font-size: 12px;
+        flex-shrink: 0;
       }
 
       .clear-input {
@@ -850,6 +889,7 @@
       <div class="input-section">
         <div class="input-header">
           <div class="input-title">Input</div>
+          <div class="input-status" id="input-status"></div>
           <button type="button" class="clear-input" id="clear-input">
             Clear
           </button>
