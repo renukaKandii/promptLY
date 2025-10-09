@@ -469,6 +469,12 @@
         setInputStatus("Done!", "success", "✅");
         setTimeout(() => setInputStatus(""), 3000);
         
+        // Smooth auto-scroll to show both input and output (20% of viewport)
+        setTimeout(() => {
+          const scrollAmount = window.innerHeight * 0.25;
+          window.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+        }, 100);
+        
         // Add to history only if not stopped
         addToHistory({
           timestamp: Date.now(),

@@ -20,7 +20,7 @@ A Chrome extension that transforms your writing using on-device AI (Gemini Nano)
 [![Built with AI](https://img.shields.io/badge/Built%20with-Chrome%20AI-purple)](https://developer.chrome.com/docs/ai/built-in)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Quick Prompts](#-quick-prompts-explained) • [Roadmap](#-roadmap--possible-future-features)
+[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Quick Prompts](#quick-prompts-explained) • [Roadmap](#roadmap--possible-future-features)
 
 </div>
 
@@ -32,7 +32,7 @@ A Chrome extension that transforms your writing using on-device AI (Gemini Nano)
 
 - 📧 **Need to reply to an email?** Don't want to open ChatGPT, copy-paste, wait, copy-paste back...
 - 🤖 **AI text sounds robotic?** Need to humanize it but switching tabs breaks your flow...
-- ✈️ **On a plane with no WiFi?** All those cloud AI tools are useless...
+- ✈️ **On a plane with no WiFi?** Can't use cloud AI tools...
 - 🔒 **Handling sensitive data?** Company policy says no external AI...
 - 💸 **Hit your free limit?** ChatGPT capped and you need one more rewrite...
 - ⚡ **Just want it quick?** Select → Right-click → Done. No tab juggling...
@@ -53,14 +53,18 @@ It's AI, but **private. Fast. Always there. Right where you need it.**
 
 ## 🎯 What is promptLY?
 
-promptLY is a **text transformation tool** that leverages Chrome's built-in AI to help you rewrite, summarize, translate, and proofread content — all **100% on-device** with zero data sent to external servers.
+A **text transformation tool** using Chrome's built-in AI - all processing happens **100% on-device**.
 
-**But it's more than just a text transformer!** With the right custom instructions, promptLY can also:
-- ✅ Answer questions in detail
+promptLY uses Chrome's built-in Language Model API (Gemini Nano on-device) for text rewriting and summarization. When available, it automatically connects to window.ai / chrome.ai; otherwise, it uses the underlying LanguageModel API to maintain compatibility.
+
+**Core capabilities:**
+- ✅ Rewrite, summarize, translate, proofread text
+- ✅ Reply to emails professionally
+- ✅ Humanize robotic AI text
+- ✅ Simplify complex content
+- ✅ Answer questions with custom instructions
 - ✅ Solve problems step-by-step
-- ✅ Draft professional emails
-- ✅ Explain complex concepts simply
-- ✅ And much more!
+- ✅ And much more with custom prompts!
 
 ---
 
@@ -82,7 +86,7 @@ Pre-configured transformations for common tasks:
 
 1. **Simplify (ELI5)** - Explain anything using simple, everyday language
 2. **Elaborate** - Add more details, context, and real-world examples
-3. **Reply to Email** - Draft professional email responses *(Note: Works ~99% of the time; occasional edge cases may produce unexpected results)*
+3. **Reply to Email** - Draft professional email responses *(Works ~99% of the time)*
 4. **Humanize** - Remove robotic tone and make text sound more natural
 
 ### 💭 **Custom Instructions**
@@ -104,60 +108,113 @@ Write your own prompts for unlimited flexibility:
 - Visual feedback for selected prompts (blue border highlights active selection)
 - Stop button to cancel long-running generations (waits for completion, then discards result)
 - Auto-clear output on new Run for clean slate
+- **NEW:** Inline status messages in Input header - see "Generating...", "Done!", "Copied!" right where you're working
+- **NEW:** Custom Instructions hidden by default to save space - auto-expands when Quick Prompt is clicked
+- **NEW:** Helpful tooltip on "Reply to Email" prompt - hover to see usage tips
+- **NEW:** All action feedback (copy, clear, reset) appears inline for better visibility
 
 ---
 
 ## 🛠️ Installation
 
-### Prerequisites
-
-You need **Google Chrome version 127 or higher**. Check your version:
-- Click menu (⋮) → Help → About Google Chrome
-- Should show version **127+** (current stable is 141+)
-
-✅ **Works on Chrome Stable** - No need for Dev or Canary!
-
-⚠️ **Internet Required:** Only for initial setup to download the AI model (~2GB). After that, works completely offline!
-
-### Step 1: Enable Chrome's Built-in AI
+### Step 1: Enable Chrome Flags
 
 1. **Enable Optimization Guide:**
-   - Navigate to: `chrome://flags/#optimization-guide-on-device-model`
-   - Select: **"Enabled BypassPerfRequirement"** from dropdown
-   - This allows the AI model to run without strict performance checks
+   - Copy and paste in address bar: `chrome://flags/#optimization-guide-on-device-model`
+   - Select: **"Enabled BypassPerfRequirement"** from the dropdown
 
 2. **Enable Prompt API:**
-   - Navigate to: `chrome://flags/#prompt-api-for-gemini-nano`
-   - Select: **"Enabled"** from dropdown
-   - This activates the AI text generation capabilities
+   - Copy and paste in address bar: `chrome://flags/#prompt-api-for-gemini-nano`
+   - Select: **"Enabled"** from the dropdown
 
-3. **Enable Summarization API** (Optional but recommended):
-   - Navigate to: `chrome://flags/#summarization-api-for-gemini-nano`
-   - Select: **"Enabled"** from dropdown
+3. **Restart Chrome:**
+   - Click the blue **"Relaunch"** button that appears at the bottom
+   - Chrome will close and reopen
 
-4. **Restart Chrome:**
-   - Click the **"Relaunch"** button that appears at the bottom
-   - Chrome will restart with AI features enabled
+✅ Flags enabled!
 
-### Step 2: Verify AI Availability
+---
 
-1. Open **DevTools Console** (Press `F12` or `Ctrl+Shift+J` / `Cmd+Option+J`)
-2. Run this command:
+### Step 2: Check for window.ai API (Optional Check)
+
+1. **Press F12** to open Developer Console
+
+2. **Type and press Enter:**
    ```javascript
-   (await ai.languageModel.capabilities()).available;
+   window.ai
    ```
-3. **Expected Results:**
-   - `"readily"` ✅ - AI is ready to use!
-   - `"after-download"` ⏳ - Model is downloading (wait 5-10 minutes, then check again)
-   - `"no"` ❌ - AI not available (check flags settings and Chrome version)
 
-4. **If downloading:** The Gemini Nano model (~1.5-2GB) will download automatically. You can check progress:
+3. **What you see:**
+
+   **If you see an object** like `{languageModel: ...}` ✅
+   - Great! You have this API.
+   - Download the model:
+     ```javascript
+     await ai.languageModel.create()
+     ```
+   - Wait 5-10 minutes for the ~2GB download
+   - Skip to Step 4
+
+   **If you see `undefined`**
+   - Don't worry! This is normal (Google's gradual rollout process)
+   - You can try Chrome Dev or Canary if you want this specific API
+   - Or just **continue to Step 3** - the LanguageModel API works just as well!
+
+---
+
+### Step 3: Check for LanguageModel API (Main Method)
+
+Most users will use this method:
+
+1. **In the console, type:**
    ```javascript
-   await ai.languageModel.create();
+   LanguageModel
    ```
-   This will show download progress in the console.
 
-### Step 3: Install promptLY Extension
+2. **Expected result:**
+   ```javascript
+   ƒ LanguageModel() { [native code] }
+   ```
+
+3. **What this means:**
+
+   ✅ **If you see this function** - Perfect! AI is available. Continue below:
+   
+   ```javascript
+   await LanguageModel.create({ output: { language: "en" } })
+   ```
+   
+   - This downloads the ~2GB AI model
+   - **Wait 5-10 minutes** for download to complete
+   - Chrome might feel slow during download - this is normal
+   
+   ❌ **If you see "not defined"** - Something's wrong:
+   - Make sure you're on Chrome 127+ (check `chrome://version`)
+   - Go back to Step 1 and verify you enabled BOTH flags correctly
+   - Make sure you clicked "Relaunch" and Chrome restarted
+   - Close ALL Chrome windows completely and reopen
+   - If still not working, see [Troubleshooting](#troubleshooting)
+
+---
+
+### Step 4: Verify Model Downloaded
+
+1. **Go to Chrome Components:**
+   - Copy and paste: `chrome://components`
+
+2. **Find "Optimization Guide On Device Model":**
+   - Scroll through the list to find this component
+
+3. **Check the version:**
+   - **Version: 0.0.0.0** → Still downloading, wait longer
+   - **Version: 2024.xx.xx.xxxx** (has numbers) → ✅ **Downloaded and ready!**
+   - **Not in the list** → Download hasn't started yet, go back to Step 3
+
+✅ **Once you see a version with numbers, the AI model is ready!**
+
+---
+
+### Step 5: Install promptLY Extension
 
 **Option 1: From Chrome Web Store** *(Coming Soon)*
 - Visit the Chrome Web Store listing
@@ -165,130 +222,145 @@ You need **Google Chrome version 127 or higher**. Check your version:
 - Click **"Add extension"** in the popup
 - Done!
 
-**Option 2: Manual Installation (Developer Mode)**
+**Option 2: Manual Installation**
 
-1. **Download the Extension:**
-   - Clone this repository or download as ZIP
+1. **Download promptLY:**
    ```bash
    git clone https://github.com/renukaKandii/promptly.git
    ```
-   - Or download ZIP and extract it
+   Or download ZIP and extract
 
-2. **Open Chrome Extensions Page:**
-   - Navigate to: `chrome://extensions/`
-   - Or click: Menu (⋮) → Extensions → Manage Extensions
+2. **Open Extensions Page:**
+   ```
+   chrome://extensions
+   ```
 
 3. **Enable Developer Mode:**
-   - Toggle the **"Developer mode"** switch in the top-right corner
+   - Toggle the switch in the top-right corner
 
-4. **Load the Extension:**
+4. **Load the extension:**
    - Click **"Load unpacked"** button (top-left)
-   - Select the `promptly` folder (the one containing `manifest.json`)
-   - The extension will appear in your extensions list
+   - Select the `promptly` folder (contains manifest.json)
+   - Extension appears in your list
 
-5. **Pin to Toolbar (Optional but recommended):**
-   - Click the puzzle piece icon (🧩) in your Chrome toolbar
-   - Find "promptLY" in the list
-   - Click the pin icon 📌 next to it
-   - promptLY icon will now appear in your toolbar
+5. **Pin to toolbar (recommended):**
+   - Click puzzle icon 🧩 in toolbar
+   - Find "promptLY"
+   - Click pin icon 📌
 
-### Step 4: Verify Installation
-
-1. You should see the promptLY icon in your Chrome toolbar
-2. Right-click on any text on a webpage
-3. You should see **"promptLY"** in the context menu
-4. Click it to open the side panel
-5. If everything works, you're ready to go! 🎉
+✅ **Installation complete!** Right-click any text to try it!
 
 ---
 
 ## 🎮 Usage
 
+### Quick Start
+
+1. **Select any text** on any webpage
+2. **Right-click** → Click **"promptLY"**
+3. Side panel opens with your text
+4. **(Optional)** Choose mode, tone, or click a Quick Prompt
+5. **Click ▶ Run**
+6. **Click 📋 Copy** to use the result
+
+---
+
 ### Method 1: Right-Click Context Menu (Recommended)
 
 Perfect for transforming text you find on websites:
 
-1. **Select any text** on any webpage (emails, articles, documents, etc.)
-2. **Right-click** on the selected text
-3. Click **"promptLY"** from the context menu
-4. The side panel opens with:
-   - Your selected text in the **Input** field
-   - Mode set to **"Rewrite"**
-   - Tone set to **"Professional"**
-5. (Optional) Change mode, tone, language, or add custom instructions
-6. (Optional) Click a **Quick Prompt** for common transformations
-7. Click **▶ Run**
-8. Your transformed text appears in the **Output** section
-9. Click **📋 Copy** to copy the result to clipboard
+1. Select text on any webpage
+2. Right-click → **"promptLY"**
+3. Side panel opens with:
+   - Your text in Input field
+   - Mode: Rewrite
+   - Tone: Professional
+4. (Optional) Change settings or click a Quick Prompt
+5. Click **▶ Run**
+6. Watch the inline status: "⚡ Generating..." → "✅ Done!"
+7. Copy the output!
+
+---
 
 ### Method 2: Direct Side Panel Use
 
 Perfect for pasting content or writing from scratch:
 
-1. Click the **promptLY icon** 🟣 in your Chrome toolbar
-2. The side panel opens
-3. **Paste or type** your text in the **Input** field
-4. Select your desired **Mode** (Rewrite, Summarize, Translate, Proofread)
-5. Choose your **Tone** (Professional, Casual, Curious, Poetic)
-6. Select **Language** if translating (English, Español, 日本語)
-7. (Optional) Click a **Quick Prompt** or write **Custom Instructions**
-8. Click **▶ Run**
-9. Review the output and click **📋 Copy** when satisfied
+1. Click the **promptLY icon** in your toolbar
+2. Paste or type your text
+3. Choose Mode, Tone, Language
+4. (Optional) Click a Quick Prompt (Custom Instructions auto-expands!)
+5. Click **▶ Run**
+6. Review and copy!
+
+---
 
 ### Using Quick Prompts
 
 Quick Prompts are one-click transformations:
 
-1. Open promptLY (via toolbar icon or right-click)
-2. Input or paste your text
-3. Click any **Quick Prompt card** (Simplify, Elaborate, Reply to Email, Humanize)
-   - The prompt automatically fills the Custom Instructions field
-   - The card highlights with a blue border
-4. Review the custom instruction (you can edit it!)
-5. Click **▶ Run**
+1. Open promptLY
+2. Paste your text
+3. **Click a Quick Prompt card:**
+   - Simplify (ELI5)
+   - Elaborate
+   - **Reply to Email** *(Hover to see tooltip with usage tip!)*
+   - Humanize
+4. Custom Instructions auto-expands showing the prompt (you can edit it!)
+5. Card highlights with blue border
+6. Click **▶ Run**
+
+💡 **Tip:** Hover over the "Reply to Email" card to see helpful guidance about selecting the entire email for best results!
+
+---
 
 ### Using Custom Instructions
 
 For maximum flexibility:
 
 1. Open promptLY
-2. Input your text
-3. Click the **Custom Instructions** textarea
-4. Type your specific instruction, examples:
-   - "Answer this question in detail with examples"
+2. Paste your text
+3. Click **"+ Show Custom"** to expand Custom Instructions (or click a Quick Prompt to auto-expand)
+4. Type your instruction:
+   - "Answer this question in detail"
    - "Solve this math problem step-by-step"
-   - "Rewrite as a LinkedIn post"
-   - "Make this more persuasive for executives"
-   - "Explain this to a 5-year-old"
+   - "Make this more persuasive"
 5. Click **▶ Run**
+
+---
 
 ### Managing History
 
-promptLY automatically saves your last 10 transformations:
+- promptLY saves your last 10 transformations
+- Click any history item to restore everything
+- Click **"Clear All"** to delete history
 
-1. Scroll to the **Recent History** section at the bottom
-2. Each history item shows:
-   - Mode used (REWRITE, SUMMARIZE, etc.)
-   - Time ago (just now, 5m ago, 1h ago, etc.)
-   - Input preview (first 60 characters)
-3. **Click any history item** to restore:
-   - Input text
-   - Mode
-   - Tone
-   - Language
-   - Custom instructions
-   - Previous output
-4. Click **Clear All** to delete history
+---
 
-### Stopping a Generation
+### Understanding Status Messages
 
-If you accidentally clicked Run or want to cancel:
+promptLY shows status in **two places**:
 
-1. While generating, the Run button becomes **⏹ Stop** (red)
-2. Click **Stop** to signal cancellation
-3. The AI will complete the current generation (cannot interrupt mid-stream)
-4. Output will be discarded automatically
-5. Controls re-enable immediately after completion
+**Top Status Bar:**
+- Shows AI availability only
+- "Ready" / "Built-in AI" / "Downloading AI model..."
+- Stays mostly static
+
+**Input Header (Inline):**
+- Shows action feedback right where you work!
+- "⚡ Generating..." / "✅ Done!" / "📋 Copied!"
+- Auto-hides after 3 seconds
+- Always visible when scrolled to input/output area
+
+---
+
+### Tips
+
+- **Stop button:** Click ▶ Run while processing to stop (becomes ⏹ Stop in red)
+- **Clear buttons:** Clear Input or Output anytime
+- **Reset All:** Resets Mode, Tone, Language, Custom Instructions to defaults
+- **Hidden by default:** Custom Instructions starts collapsed to save space
+- **Works offline:** After model downloads, no internet needed!
 
 ---
 
@@ -349,12 +421,14 @@ If you accidentally clicked Run or want to cancel:
 **Prompt:** "Write my professional email reply to this message. I am responding to them, not the other way around. Keep a professional tone, thank them if appropriate, and respond to their key points naturally."
 
 **Best for:**
-- Job applications responses
+- Job application responses
 - Business correspondence
 - Networking emails
 - Customer service replies
 
-**Important Note:** This works very reliably (~99% success rate), but occasionally the AI might misinterpret sender/recipient context in complex email threads. If the output addresses you instead of responding for you, simply click **▶ Run** again or add an explicit custom instruction like "I am replying to them."
+**Important Note:** This works very reliably (~99% success rate), but occasionally the AI might misinterpret sender/recipient context in complex email threads. If the output addresses you instead of responding for you, simply click **▶ Run** again or add an explicit custom instruction.
+
+💡 **Pro Tip:** Hover over the "Reply to Email" card in promptLY to see a helpful tooltip about selecting the entire email (from greeting to signature) for best results!
 
 **Example:**
 - **Input:** 
@@ -518,6 +592,7 @@ I'm constantly thinking about how to improve promptLY. Here are features I'm con
 - [ ] **Better Email Detection** - More robust handling of complex email threads
 - [ ] **Keyboard Shortcuts** - Quick access (e.g., `Alt+P` to open panel)
 - [ ] **Custom Quick Prompts** - Let users create and save their own presets
+- [ ] **Persistent Custom Instructions** - Remember last used custom prompt
 
 ### Medium Priority
 - [ ] **Batch Processing** - Transform multiple texts at once
@@ -565,10 +640,10 @@ I'm constantly thinking about how to improve promptLY. Here are features I'm con
 
 **Model Download:**
 - **Requires internet connection** for initial ~1.5-2GB model download
-- Download happens automatically on first use
+- Download happens automatically when you run the create command
 - Takes 5-10 minutes depending on internet speed
 - **After download, works completely offline!**
-- Progress can be checked in DevTools console
+- Progress can be checked in chrome://components
 
 **Language Support:**
 - Currently limited to English, Spanish, Japanese
@@ -576,7 +651,7 @@ I'm constantly thinking about how to improve promptLY. Here are features I'm con
 - Translation quality varies by language pair
 
 **Processing:**
-- Cannot be interrupted mid-generation (Stop button waits for completion)
+- Cannot be interrupted mid-generation (Stop button waits for completion then discards)
 - Longer texts (>2000 words) may take 10-15 seconds
 - Very complex custom instructions may produce unexpected results
 
@@ -586,26 +661,42 @@ I'm constantly thinking about how to improve promptLY. Here are features I'm con
 
 Occasionally (≈1% of cases) the AI may:
 - Address you instead of the sender
-- Misinterpret sender/recipient in complex email threads with multiple people
+- Misinterpret sender/recipient in complex email threads
 - Get confused by forwarded messages with nested quotes
 
-**Workarounds:**
+**Best practices for email replies:**
+- Select the entire email (from "Dear..." to signature)
+- Hover over the "Reply to Email" card to see the tooltip reminder
+- For complex threads, add explicit custom instruction
+
+**Workarounds if it fails:**
 1. Click **▶ Run** again (often works on second try)
 2. Add explicit instruction: "I am replying to them, not the other way around"
 3. Manually edit the generated output
 4. Use Custom Instructions instead of Quick Prompt
 
-**When it works best:**
-- Simple 1-on-1 email threads
-- Clear sender/recipient context
-- Standard business correspondence
-
 ### UI & Interaction
+
+**Space-Saving Design:**
+- Custom Instructions hidden by default (saves vertical space)
+- Auto-expands when you click a Quick Prompt
+- Allows Run button to be visible without scrolling
+- Click "+ Show Custom" to manually expand
+
+**Inline Status Messages:**
+- Action feedback appears in Input header (between "INPUT" and "Clear")
+- See "Generating...", "Done!", "Copied!" right where you're working
+- Auto-hides after 3 seconds to keep UI clean
+- Top status bar only shows AI availability (doesn't change during operations)
 
 **Output Clearing:**
 - Previous output is cleared when clicking Run
-- This is intentional to avoid confusion, but means you can't compare results
+- This is intentional to avoid confusion with stale content
 - Use History feature to restore previous outputs
+
+**Quick Prompt Tooltip:**
+- Hover over "Reply to Email" card to see usage tips
+- Suggests selecting entire email for best results
 
 **History Limitations:**
 - Limited to last 10 items (saves browser storage)
@@ -613,8 +704,8 @@ Occasionally (≈1% of cases) the AI may:
 - Cleared when browser cache is cleared
 
 **Visual Feedback:**
-- Quick Prompt highlight only shows most recent selection
-- Cleared when side panel closes
+- Quick Prompt cards highlight with blue border when selected
+- Selection persists until you click another card
 - Cannot select multiple Quick Prompts simultaneously
 
 ---
@@ -635,7 +726,7 @@ This is currently a **solo project**, and I prefer to maintain the codebase myse
    - Screenshots if applicable
 
 **Have a Feature Idea?**
-1. Open an [Issue](https://github.com/renukaKandii/promptly/issues) with the "feature request" label
+1. Open an [Issue](https://github.com/renukaKandii/promptly/issues) with "feature request" label
 2. Describe the feature and why it would be useful
 3. Share your use case
 4. I'll review and consider it for future updates!
@@ -695,7 +786,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - 📖 **Documentation:** You're reading it!
 - 🐛 **Report Bugs:** [GitHub Issues](https://github.com/renukaKandii/promptly/issues)
 - 💡 **Feature Requests:** [GitHub Issues](https://github.com/renukaKandii/promptly/issues)
-- ❓ **Questions:** Feel free to open an issue with your question!
+- ❓ **Questions:** Feel free to open an issue!
 
 ### Connect
 
@@ -708,7 +799,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 Since this is a solo project:
 - **Bugs:** I aim to respond within 2-3 days
 - **Feature requests:** May take longer to evaluate
-- **Pull requests:** Reviewed within a week
 
 Please be patient! I work on this in my free time. 😊
 
@@ -797,7 +887,7 @@ promptLY is an **experimental tool** using browser AI APIs.
 
 ## 🔍 FAQ
 
-### General
+### General Questions
 
 **Q: Is promptLY really free?**
 A: Yes! No subscriptions, no in-app purchases, no ads. Completely free and open source.
@@ -808,13 +898,24 @@ A: Yes! After the initial model download (requires internet), all processing hap
 **Q: What languages are supported?**
 A: Currently English, Spanish (Español), and Japanese (日本語). More coming soon!
 
-### Technical
+**Q: Can I use this for work/commercial purposes?**
+A: Yes! MIT License allows commercial use. However, always review AI outputs for professional contexts.
+
+---
+
+### Setup & Technical Questions
 
 **Q: Why do I need Chrome 127+?**
 A: Chrome's built-in AI (Gemini Nano) was introduced in version 127. Earlier versions don't have the necessary AI capabilities.
 
+**Q: I get "ai is not defined" OR "LanguageModel is not defined". What's wrong?**
+A: The flags aren't enabled correctly. Go back to Step 1, make sure you enabled BOTH flags with the exact options shown, click "Relaunch", then close ALL Chrome windows and reopen fresh.
+
 **Q: How do I know if the AI model is ready?**
-A: Run `(await ai.languageModel.capabilities()).available` in DevTools console. If it returns `"readily"`, you're good!
+A: Check `chrome://components` and look for "Optimization Guide On Device Model". If the version shows numbers (not 0.0.0.0), it's ready!
+
+**Q: I don't see "Optimization Guide On Device Model" in chrome://components**
+A: Run `await LanguageModel.create({ output: { language: "en" } })` in console to trigger the download. Check components again after a few minutes.
 
 **Q: Can I use this on Firefox/Safari/Edge?**
 A: No. Chrome's built-in AI is Chrome-specific. Other browsers may add similar features in the future.
@@ -822,7 +923,12 @@ A: No. Chrome's built-in AI is Chrome-specific. Other browsers may add similar f
 **Q: Why is the model download so large?**
 A: Gemini Nano is a powerful AI model that runs entirely on your device. The ~2GB size is necessary for its capabilities.
 
-### Privacy
+**Q: Does window.ai or LanguageModel work?**
+A: promptLY supports BOTH! It automatically detects which API is available on your Chrome and uses it. You don't need to worry about which one you have.
+
+---
+
+### Privacy Questions
 
 **Q: Is my text sent to any servers?**
 A: No! All processing happens locally on your device. Zero data leaves your machine.
@@ -830,13 +936,49 @@ A: No! All processing happens locally on your device. Zero data leaves your mach
 **Q: Can my employer/school see what I'm transforming?**
 A: No. Unlike cloud AI tools, promptLY doesn't send data anywhere, so there's no server logs to monitor.
 
-### Usage
+**Q: Does Google see my prompts?**
+A: No. Your text stays on your device. Google may collect anonymous usage statistics about the AI feature itself (not your content).
+
+---
+
+### Usage Questions
 
 **Q: Why didn't "Reply to Email" work correctly?**
-A: In rare cases (~1%), the AI may misinterpret sender/recipient. Try clicking Run again or add explicit custom instruction.
+A: In rare cases (~1%), the AI may misinterpret sender/recipient. Try selecting the entire email (greeting to signature), click Run again, or add the explicit custom instruction shown in the tooltip.
 
-**Q: Can I use this for work/commercial purposes?**
-A: Yes! MIT License allows commercial use. However, always review AI outputs for professional contexts.
+**Q: Where do I see the tooltip for Reply to Email?**
+A: Hover your mouse over the "Reply to Email" Quick Prompt card. A tooltip will appear with usage tips.
+
+**Q: Where do status messages appear?**
+A: Status messages appear in two places: (1) Top bar shows AI availability ("Ready", "Built-in AI"), and (2) Input header shows action feedback ("Generating...", "Done!", "Copied!") right where you're working.
+
+**Q: Why is Custom Instructions hidden by default?**
+A: To save vertical space so you can see the Run button without scrolling. It auto-expands when you click a Quick Prompt, or you can manually show it with the "+ Show Custom" button.
+
+**Q: How do I export my history?**
+A: Currently, history is browser-local only. Export feature is planned for future versions.
+
+**Q: Can I customize the Quick Prompts?**
+A: Not yet, but custom Quick Prompts are planned for a future update. For now, use Custom Instructions for your own prompts.
+
+---
+
+### Troubleshooting Questions
+
+**Q: promptLY won't install. What do I do?**
+A: Make sure you're using Chrome 127+ (check `chrome://version`), and that you've enabled Developer Mode in `chrome://extensions/`.
+
+**Q: The extension shows "AI not available" or "local fallback"**
+A: The AI model isn't downloaded yet. Go to `chrome://components`, find "Optimization Guide On Device Model", and click "Check for update". Or run `await LanguageModel.create({ output: { language: "en" } })` in console.
+
+**Q: It says the model is downloading. How long does it take?**
+A: Usually 5-10 minutes depending on your internet speed. You can continue using Chrome normally during download.
+
+**Q: Why is processing slow?**
+A: Large texts or complex instructions take longer. Performance also depends on your device's CPU/RAM. Close other tabs to free up resources.
+
+**Q: The Stop button doesn't immediately stop generation**
+A: Chrome's AI APIs don't support mid-generation interruption. The Stop button signals to discard the result once generation completes (usually within seconds).
 
 ---
 
@@ -862,9 +1004,14 @@ A: Yes! MIT License allows commercial use. However, always review AI outputs for
 ✅ "Extract 5 bullet points, each under 15 words"
 ```
 
+**Combine Multiple Instructions:**
+```
+✅ "Rewrite this email in a friendly but professional tone, keep it under 100 words, and add a clear call-to-action at the end"
+```
+
 ### Maximizing Output Quality
 
-1. **Start with a good input** - AI can't fix unclear source material
+1. **Start with good input** - AI can't fix unclear source material
 2. **Use specific modes** - Summarize for long content, Rewrite for quality
 3. **Iterate** - Run multiple times with tweaked instructions
 4. **Compare outputs** - Use History to compare different approaches
@@ -873,7 +1020,7 @@ A: Yes! MIT License allows commercial use. However, always review AI outputs for
 ### Productivity Hacks
 
 **Quick Email Responses:**
-1. Select the email you received
+1. Select the email you received (entire email for best results!)
 2. Right-click → promptLY
 3. Click "Reply to Email"
 4. Click Run → Copy → Send!
@@ -883,6 +1030,74 @@ A: Yes! MIT License allows commercial use. However, always review AI outputs for
 2. Right-click → promptLY
 3. Click "Simplify (ELI5)"
 4. Understand easily!
+
+**Humanizing AI Content:**
+1. Paste AI-generated text
+2. Click "Humanize" Quick Prompt
+3. Run → Much more natural!
+
+---
+
+## 📊 Troubleshooting
+
+### AI Not Available
+
+**Symptom:** Extension shows "AI not available - local mode" or you get errors in console
+
+**Solutions:**
+
+1. **Verify Chrome version:**
+   - Go to `chrome://version`
+   - Must be 127 or higher
+
+2. **Check flags are enabled:**
+   - `chrome://flags/#optimization-guide-on-device-model` → "Enabled BypassPerfRequirement"
+   - `chrome://flags/#prompt-api-for-gemini-nano` → "Enabled"
+
+3. **Verify API is available:**
+   - Open console (F12)
+   - Type: `LanguageModel`
+   - Should see: `ƒ LanguageModel() { [native code] }`
+   - If "not defined" → Flags didn't work, restart Chrome completely
+
+4. **Download the model:**
+   - In console: `await LanguageModel.create({ output: { language: "en" } })`
+   - Wait 5-10 minutes
+   - Check `chrome://components` for "Optimization Guide On Device Model"
+
+---
+
+### Model Won't Download
+
+**Symptom:** chrome://components doesn't show the model or version is 0.0.0.0
+
+**Solutions:**
+
+1. Run the create command in console to trigger download:
+   ```javascript
+   await LanguageModel.create({ output: { language: "en" } })
+   ```
+
+2. Wait at least 10 minutes (it's a 2GB download)
+
+3. Check your internet connection
+
+4. Refresh chrome://components page
+
+5. If still not downloading, try Chrome Dev or Canary
+
+---
+
+### Extension Shows "Local Fallback"
+
+**Symptom:** promptLY works but shows placeholder text instead of AI-generated content
+
+**Solutions:**
+
+1. Model isn't downloaded - check chrome://components
+2. Reload the extension in chrome://extensions
+3. Make sure flags are still enabled
+4. Try running the create command again in console
 
 ---
 
@@ -898,6 +1113,6 @@ A: Yes! MIT License allows commercial use. However, always review AI outputs for
 
 ⭐ **Star this repo if you find it useful!** ⭐
 
-[Report Bug](https://github.com/renukaKandii/promptly/issues) • [Request Feature](https://github.com/renukaKandii/promptly/issues) • [Connect on LinkedIn](https://www.linkedin.com/in/naga-renuka-kandi/)
+[Report Bug](https://github.com/renukaKandii/promptly/issues) • [Request Feature](https://github.com/renukaKandii/promptly/issues) • [LinkedIn](https://www.linkedin.com/in/naga-renuka-kandi/)
 
 </div>

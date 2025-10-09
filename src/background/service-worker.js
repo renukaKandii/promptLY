@@ -55,11 +55,31 @@ function sendToast(tabId, text) {
 
 // Context menu click handler - opens side panel with selected text
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (!tab?.id || !info.selectionText) return;
+  if (!tab?.id) return;
 
   log(`Context menu clicked, opening side panel...`);
 
   try {
+    // Inject script to get selection with formatting preserved
+    const results = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return '';
+        
+        const range = selection.getRangeAt(0);
+        const container = document.createElement('div');
+        container.appendChild(range.cloneContents());
+        
+        // Get text with line breaks preserved
+        return container.innerText || container.textContent || '';
+      }
+    });
+
+    const selectedText = results && results[0] && results[0].result 
+      ? results[0].result 
+      : info.selectionText || '';
+
     // Open the side panel
     await chrome.sidePanel.open({ windowId: tab.windowId });
     
@@ -67,7 +87,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     setTimeout(() => {
       chrome.runtime.sendMessage({
         type: "PROMPTLY_SET_INPUT",
-        text: info.selectionText,
+        text: selectedText,
         autoRun: false // Do NOT auto-run - let user configure and click Run
       });
     }, 300);
@@ -76,7 +96,19 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     sendToast(tab.id, `promptLY: Opening side panel...`);
   } catch (e) {
     log("Error opening side panel:", e);
-    sendToast(tab.id, "promptLY: Could not open side panel");
+    // Fallback to plain text if script injection fails
+    try {
+      await chrome.sidePanel.open({ windowId: tab.windowId });
+      setTimeout(() => {
+        chrome.runtime.sendMessage({
+          type: "PROMPTLY_SET_INPUT",
+          text: info.selectionText || '',
+          autoRun: false
+        });
+      }, 300);
+    } catch (fallbackError) {
+      sendToast(tab.id, "promptLY: Could not open side panel");
+    }
   }
 });
 
