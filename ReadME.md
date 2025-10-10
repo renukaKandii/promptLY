@@ -20,7 +20,7 @@ A Chrome extension that transforms your writing using on-device AI (Gemini Nano)
 [![Built with AI](https://img.shields.io/badge/Built%20with-Chrome%20AI-purple)](https://developer.chrome.com/docs/ai/built-in)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Quick Prompts](#quick-prompts-explained) • [Roadmap](#roadmap--possible-future-features)
+[Features](#-features) • [Installation](#installation) • [Usage](#-usage) • [Quick Prompts](#-quick-prompts-explained) • [Roadmap](#-roadmap--possible-future-features)
 
 </div>
 
@@ -108,14 +108,15 @@ Write your own prompts for unlimited flexibility:
 - Visual feedback for selected prompts (blue border highlights active selection)
 - Stop button to cancel long-running generations (waits for completion, then discards result)
 - Auto-clear output on new Run for clean slate
-- **NEW:** Inline status messages in Input header - see "Generating...", "Done!", "Copied!" right where you're working
-- **NEW:** Custom Instructions hidden by default to save space - auto-expands when Quick Prompt is clicked
-- **NEW:** Helpful tooltip on "Reply to Email" prompt - hover to see usage tips
-- **NEW:** All action feedback (copy, clear, reset) appears inline for better visibility
+- **Auto-scroll after generation** - Smoothly scrolls 20% to show both input & output together
+- **Inline status messages** in Input header - see "Generating...", "Done!", "Copied!" right where you're working
+- **Custom Instructions hidden by default** to save space - auto-expands when Quick Prompt is clicked
+- **Helpful tooltip** on "Reply to Email" prompt - hover to see usage tips
+- **All action feedback** (copy, clear, reset) appears inline for better visibility
 
 ---
 
-## 🛠️ Installation
+##  Installation
 
 ### Step 1: Enable Chrome Flags
 
@@ -137,14 +138,22 @@ Write your own prompts for unlimited flexibility:
 
 ### Step 2: Check for window.ai API (Optional Check)
 
-1. **Press F12** to open Developer Console
+1. **Press F12** to open Developer Tools
 
-2. **Type and press Enter:**
+2. **Click on the "Console" tab** at the top of Developer Tools panel
+
+3. **Type and press Enter:**
    ```javascript
    window.ai
    ```
 
-3. **What you see:**
+4. **⚠️ First time pasting?**
+   - You'll see: `Warning: Don't paste code into the DevTools Console that you don't understand...`
+   - Type: `allow pasting` (exactly as shown)
+   - Press Enter
+   - Now you can paste commands
+
+5. **What you see:**
 
    **If you see an object** like `{languageModel: ...}` ✅
    - Great! You have this API.
@@ -152,7 +161,9 @@ Write your own prompts for unlimited flexibility:
      ```javascript
      await ai.languageModel.create()
      ```
-   - Wait 5-10 minutes for the ~2GB download
+   - You may see a warning - **ignore it, this is normal**
+   - Go to `chrome://components` to verify download started
+   - Wait 10-15 minutes for the ~2GB download
    - Skip to Step 4
 
    **If you see `undefined`**
@@ -166,7 +177,7 @@ Write your own prompts for unlimited flexibility:
 
 Most users will use this method:
 
-1. **In the console, type:**
+1. **In the console (F12 → Console tab), type:**
    ```javascript
    LanguageModel
    ```
@@ -175,6 +186,7 @@ Most users will use this method:
    ```javascript
    ƒ LanguageModel() { [native code] }
    ```
+   *(This means the function/object is available)*
 
 3. **What this means:**
 
@@ -184,8 +196,12 @@ Most users will use this method:
    await LanguageModel.create({ output: { language: "en" } })
    ```
    
-   - This downloads the ~2GB AI model
-   - **Wait 5-10 minutes** for download to complete
+   - **⚠️ You'll see a warning message** - This is normal! Ignore it.
+   - This triggers the ~2GB AI model download
+   - **Go to `chrome://components` immediately** (copy-paste in address bar)
+   - Find **"Optimization Guide On Device Model"** in the list
+   - Check if download has started (version will show 0.0.0.0 initially)
+   - **Wait 10-15 minutes** for download to complete
    - Chrome might feel slow during download - this is normal
    
    ❌ **If you see "not defined"** - Something's wrong:
@@ -204,13 +220,19 @@ Most users will use this method:
 
 2. **Find "Optimization Guide On Device Model":**
    - Scroll through the list to find this component
+   - **If not in the list** → Download hasn't started, go back to Step 3
 
 3. **Check the version:**
-   - **Version: 0.0.0.0** → Still downloading, wait longer
-   - **Version: 2024.xx.xx.xxxx** (has numbers) → ✅ **Downloaded and ready!**
-   - **Not in the list** → Download hasn't started yet, go back to Step 3
+   - **Version: 0.0.0.0** → Still downloading, wait longer (refresh page after a few minutes)
+   - **Version: 2024.xx.xx.xxxx** (has actual numbers) → ✅ **Downloaded and ready!**
 
-✅ **Once you see a version with numbers, the AI model is ready!**
+4. **How long does it take?**
+   - Usually **10-15 minutes** depending on internet speed
+   - The model is ~2GB, so be patient
+   - You can use Chrome normally while it downloads
+   - Refresh the components page every few minutes to check progress
+
+✅ **Once you see a version with real numbers (not 0.0.0.0), the AI model is ready!**
 
 ---
 
@@ -261,7 +283,8 @@ Most users will use this method:
 3. Side panel opens with your text
 4. **(Optional)** Choose mode, tone, or click a Quick Prompt
 5. **Click ▶ Run**
-6. **Click 📋 Copy** to use the result
+6. **Watch auto-scroll** - Page smoothly scrolls to show input & output together
+7. **Click 📋 Copy** to use the result
 
 ---
 
@@ -272,13 +295,14 @@ Perfect for transforming text you find on websites:
 1. Select text on any webpage
 2. Right-click → **"promptLY"**
 3. Side panel opens with:
-   - Your text in Input field
+   - Your text in Input field (with formatting preserved!)
    - Mode: Rewrite
    - Tone: Professional
 4. (Optional) Change settings or click a Quick Prompt
 5. Click **▶ Run**
 6. Watch the inline status: "⚡ Generating..." → "✅ Done!"
-7. Copy the output!
+7. **Auto-scroll activates** - Smoothly shows both input & output
+8. Copy the output!
 
 ---
 
@@ -291,7 +315,8 @@ Perfect for pasting content or writing from scratch:
 3. Choose Mode, Tone, Language
 4. (Optional) Click a Quick Prompt (Custom Instructions auto-expands!)
 5. Click **▶ Run**
-6. Review and copy!
+6. **Auto-scroll shows results** - No manual scrolling needed
+7. Review and copy!
 
 ---
 
@@ -309,6 +334,7 @@ Quick Prompts are one-click transformations:
 4. Custom Instructions auto-expands showing the prompt (you can edit it!)
 5. Card highlights with blue border
 6. Click **▶ Run**
+7. **Auto-scroll reveals output** - See input & output together
 
 💡 **Tip:** Hover over the "Reply to Email" card to see helpful guidance about selecting the entire email for best results!
 
@@ -326,6 +352,7 @@ For maximum flexibility:
    - "Solve this math problem step-by-step"
    - "Make this more persuasive"
 5. Click **▶ Run**
+6. **Auto-scroll positions** input & output perfectly on screen
 
 ---
 
@@ -357,16 +384,18 @@ promptLY shows status in **two places**:
 ### Tips
 
 - **Stop button:** Click ▶ Run while processing to stop (becomes ⏹ Stop in red)
+- **Auto-scroll:** After generation, page smoothly scrolls 20% to show both input & output
 - **Clear buttons:** Clear Input or Output anytime
 - **Reset All:** Resets Mode, Tone, Language, Custom Instructions to defaults
 - **Hidden by default:** Custom Instructions starts collapsed to save space
+- **Format preservation:** Right-click captures line breaks & paragraphs
 - **Works offline:** After model downloads, no internet needed!
 
 ---
 
 ## ⚡ Quick Prompts Explained
 
-### 📝 Simplify (ELI5)
+### 🧠 Simplify (ELI5)
 
 **Purpose:** Make complex content accessible to everyone, even children
 
@@ -572,14 +601,21 @@ promptLY leverages **Chrome's built-in AI APIs** (Gemini Nano) to process text e
 ┌─────────────────────┐
 │  Transformed Text   │
 └─────────────────────┘
+       │
+       ▼
+┌─────────────────────┐
+│   Auto-scroll       │
+│  Show input+output  │
+└─────────────────────┘
 ```
 
 **Key Benefits:**
 - ✅ **Internet needed initially** - One-time ~2GB model download
 - ✅ **Then works offline** - No internet required after setup
 - ✅ **No data sent anywhere** - complete privacy
-- ✅ **Fast processing** - typically 2-5 seconds
+- ✅ **Processing time** - Varies based on text length (typically 2-10 seconds)
 - ✅ **Always available** - works anywhere after model download
+- ✅ **Auto-scroll** - Smoothly positions input & output on screen
 
 ---
 
@@ -593,6 +629,7 @@ I'm constantly thinking about how to improve promptLY. Here are features I'm con
 - [ ] **Keyboard Shortcuts** - Quick access (e.g., `Alt+P` to open panel)
 - [ ] **Custom Quick Prompts** - Let users create and save their own presets
 - [ ] **Persistent Custom Instructions** - Remember last used custom prompt
+- [ ] **Adjustable auto-scroll** - Let users customize scroll amount
 
 ### Medium Priority
 - [ ] **Batch Processing** - Transform multiple texts at once
@@ -641,7 +678,7 @@ I'm constantly thinking about how to improve promptLY. Here are features I'm con
 **Model Download:**
 - **Requires internet connection** for initial ~1.5-2GB model download
 - Download happens automatically when you run the create command
-- Takes 5-10 minutes depending on internet speed
+- Takes 10-15 minutes depending on internet speed
 - **After download, works completely offline!**
 - Progress can be checked in chrome://components
 
@@ -676,6 +713,12 @@ Occasionally (≈1% of cases) the AI may:
 4. Use Custom Instructions instead of Quick Prompt
 
 ### UI & Interaction
+
+**Auto-scroll Feature:**
+- Scrolls 20% of viewport height after generation completes
+- Helps view input & output together without manual scrolling
+- Occurs after "✅ Done!" status message
+- Smooth CSS animation for better UX
 
 **Space-Saving Design:**
 - Custom Instructions hidden by default (saves vertical space)
@@ -761,7 +804,7 @@ This is currently a **solo project**, and I prefer to maintain the codebase myse
 
 ---
 
-## 📝 License
+## 📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
@@ -885,7 +928,7 @@ promptLY is an **experimental tool** using browser AI APIs.
 
 ---
 
-## 🔍 FAQ
+## 📝 FAQ
 
 ### General Questions
 
@@ -952,6 +995,9 @@ A: Hover your mouse over the "Reply to Email" Quick Prompt card. A tooltip will 
 **Q: Where do status messages appear?**
 A: Status messages appear in two places: (1) Top bar shows AI availability ("Ready", "Built-in AI"), and (2) Input header shows action feedback ("Generating...", "Done!", "Copied!") right where you're working.
 
+**Q: What is the auto-scroll feature?**
+A: After generation completes, promptLY smoothly scrolls the page 20% down so you can see both your input and output together without manual scrolling.
+
 **Q: Why is Custom Instructions hidden by default?**
 A: To save vertical space so you can see the Run button without scrolling. It auto-expands when you click a Quick Prompt, or you can manually show it with the "+ Show Custom" button.
 
@@ -972,7 +1018,7 @@ A: Make sure you're using Chrome 127+ (check `chrome://version`), and that you'v
 A: The AI model isn't downloaded yet. Go to `chrome://components`, find "Optimization Guide On Device Model", and click "Check for update". Or run `await LanguageModel.create({ output: { language: "en" } })` in console.
 
 **Q: It says the model is downloading. How long does it take?**
-A: Usually 5-10 minutes depending on your internet speed. You can continue using Chrome normally during download.
+A: Usually 10-15 minutes depending on your internet speed. You can continue using Chrome normally during download.
 
 **Q: Why is processing slow?**
 A: Large texts or complex instructions take longer. Performance also depends on your device's CPU/RAM. Close other tabs to free up resources.
@@ -1023,7 +1069,7 @@ A: Chrome's AI APIs don't support mid-generation interruption. The Stop button s
 1. Select the email you received (entire email for best results!)
 2. Right-click → promptLY
 3. Click "Reply to Email"
-4. Click Run → Copy → Send!
+4. Click Run → Auto-scroll shows result → Copy → Send!
 
 **Learning from Articles:**
 1. Select a complex paragraph
@@ -1034,7 +1080,7 @@ A: Chrome's AI APIs don't support mid-generation interruption. The Stop button s
 **Humanizing AI Content:**
 1. Paste AI-generated text
 2. Click "Humanize" Quick Prompt
-3. Run → Much more natural!
+3. Run → Auto-scroll → Much more natural!
 
 ---
 
@@ -1055,14 +1101,15 @@ A: Chrome's AI APIs don't support mid-generation interruption. The Stop button s
    - `chrome://flags/#prompt-api-for-gemini-nano` → "Enabled"
 
 3. **Verify API is available:**
-   - Open console (F12)
+   - Open console (F12 → Console tab)
    - Type: `LanguageModel`
    - Should see: `ƒ LanguageModel() { [native code] }`
    - If "not defined" → Flags didn't work, restart Chrome completely
 
 4. **Download the model:**
    - In console: `await LanguageModel.create({ output: { language: "en" } })`
-   - Wait 5-10 minutes
+   - Ignore the warning message (normal)
+   - Wait 10-15 minutes
    - Check `chrome://components` for "Optimization Guide On Device Model"
 
 ---
@@ -1078,7 +1125,7 @@ A: Chrome's AI APIs don't support mid-generation interruption. The Stop button s
    await LanguageModel.create({ output: { language: "en" } })
    ```
 
-2. Wait at least 10 minutes (it's a 2GB download)
+2. Wait at least 10-15 minutes (it's a 2GB download)
 
 3. Check your internet connection
 
